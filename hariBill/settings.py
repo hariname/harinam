@@ -77,12 +77,12 @@ WSGI_APPLICATION = 'hariBill.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'mysql.connector.django',
         'NAME': 'hariBill',
         'USER': 'harinam',
         'PASSWORD': 'qwerty123',
-        'HOST': '68.178.149.80',  # Use the appropriate hostname if not on localhost
-        'PORT': '3306',       # MySQL default port
+        'HOST': '68.178.149.80',  # Usually 'localhost'
+        'PORT': '3306',  # Default MySQL port is 3306
     }
 }
 
