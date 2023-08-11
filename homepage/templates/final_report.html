@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load mathfilters %}
+{% block css %}
+<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+{% endblock css %}
+{% block container %}
+
+
+<!--<head>-->
+<!--    <title>Responsive DataTable</title>-->
+
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">-->
+<!--</head>-->
+
+<!--<body>-->
+<div class="container-fluid">
+    <table class="table table-striped table-bordered table-hover text-center" id="example" style="width:100%">
+        <thead>
+        <tr>
+            <th>CODE</th>
+            <th>CAT</th>
+            <th>NAME</th>
+            <th>OP STOCK</th>
+            <th>SALE</th>
+            <th>SALE RATE</th>
+            <th>SALE AMT</th>
+            <th>DISCOUNT</th>
+            <th>NET SALE</th>
+            <th>PUR RATE</th>
+            <th>PUR Value</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for pro_detail_list in pro_detail_list %}
+        <tr>
+            <td>{{pro_detail_list.code}}</td>
+            <td>{{pro_detail_list.category}}</td>
+            <td>{{pro_detail_list.product_name}}</td>
+            <td>{{pro_detail_list.open_stock}}</td>
+            <td>{{pro_detail_list.purchase_qty__sum}}</td>
+
+            <td>{{pro_detail_list.sale_price}}</td>
+            <td>{{pro_detail_list.purchase_qty__sum|mul:pro_detail_list.sale_price}}</td>
+            <td>{{pro_detail_list.discount_price__sum}}</td>
+            <td>{{pro_detail_list.total_price__sum}}</td>
+
+            <td>{{pro_detail_list.purchase_price}}</td>
+            <td>{{pro_detail_list.close_stock|mul:pro_detail_list.purchase_price}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock container %}
+
+{% block js %}
+
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script>
+        $(document).ready(function () {
+            $('#example').DataTable({
+                responsive: true,
+                scrollX: true,
+                scrollCollapse: true,
+                scrollY: '50vh'
+            });
+        });
+
+
+</script>
+{% endblock js %}
+
+
+<!--</body>-->
+
+<!--</html>-->

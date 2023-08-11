@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block container %}
+    <div class="container">
+        <h1 class="text-center cursiv-title">Update Party</h1>
+        <form id="PartyForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Customer Details -->
+            <div class="row">
+                <div class="mb-3 col-lg-4">
+                    <label for="customerName">Customer Name</label>
+                    <input type="text" value="{{party.customer_name}}" class="form-control" id="customerName" name="customerName" required>
+                </div>
+                <div class="mb-3 col-lg-4">
+                    <label for="customerEmail">Customer Email</label>
+                    <input type="email" value="{{party.email}}" class="form-control" id="customerEmail" name="customerEmail" required>
+                </div>
+                <div class="mb-3 col-lg-4">
+                    <label for="pinCode">Customer Pincode</label>
+                    <input type="number" value="{{party.pipcode}}" class="form-control" id="pinCode" name="pinCode" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-3 col-lg-6">
+                    <label for="customerContact">Customer Contact Number</label>
+                    <input type="tel" class="form-control" value="{{party.phone_no}}" id="customerPhone" name="customerPhone" required>
+                </div>
+                <div class="mb-3 col-lg-6">
+                    <label for="customerName">Customer Complete Address</label>
+                    <textarea class="form-control" id="customerAddress" name="customerAddress" required>{{party.address}}</textarea>
+                </div>
+
+            </div>
+
+            <div class="text-center mb-3">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+    <!-- Include Bootstrap JS and jQuery -->
+{% block js %}
+
+{% endblock js %}

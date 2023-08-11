@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load mathfilters %}
+{% block css %}
+<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<!-- Add the required daterangepicker CSS -->
+<link href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" rel="stylesheet">
+{% endblock css %}
+{% block container %}
+
+<div class="container-fluid">
+    <!-- Add the date filter input -->
+    <div class="mb-3">
+        <label for="date_filter">Date Range Filter:</label>
+        <input type="text" class="form-control" id="date_filter" name="date_filter" autocomplete="off">
+    </div>
+    <table class="table table-striped table-bordered table-hover text-center" id="example" style="width:100%">
+        <!-- Rest of the table code -->
+    </table>
+</div>
+
+{% endblock container %}
+
+{% block js %}
+
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<!-- Add the required daterangepicker JS -->
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            var table = $('#example').DataTable({
+                responsive: true,
+                scrollX: true,
+                scrollCollapse: true,
+                scrollY: '50vh'
+            });
+
+            // Add the date filter using daterangepicker
+            $('#date_filter').daterangepicker({
+                opens: 'left',
+                autoUpdateInput: false,
+                locale: {
+                    cancelLabel: 'Clear',
+                    format: 'YYYY-MM-DD',
+                }
+            }, function(start, end, label) {
+                // Callback function when the date range is selected
+                table.column(0).search(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD')).draw();
+            });
+
+            // Clear the date filter when the "Clear" button is clicked
+            $('#date_filter').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+                table.column(0).search('').draw();
+            });
+        });
+</script>
+{% endblock js %}

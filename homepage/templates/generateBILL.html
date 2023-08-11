@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+{% block container %}
+<div class="container">
+    <h1 class="text-center cursiv-title">Billing Form</h1>
+    <form enctype="multipart/form-data" id="billingForm" method="post">
+        {% csrf_token %}
+        <!-- Customer Details -->
+        <div class="row">
+            <div class="mb-3 col-lg-6">
+                <label for="customerName">Customer Name</label>
+                <select class="form-control" id="party" name="party" onchange="get_user()">
+                    <option>Choose any one</option>
+                    {% for party in party %}
+                    <option value="{{party.id}}">{{party.customer_name|upper}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3 col-lg-6">
+                <label for="customerEmail">Customer Email</label>
+                <input class="form-control" id="customerEmail" name="customerEmail" placeholder="Customer Email"
+                       required type="email">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-lg-6">
+                <label for="customerContact">Customer Contact Number</label>
+                <input class="form-control" id="customerPhone" name="customerPhone" placeholder="Customer Contact"
+                       required type="tel">
+            </div>
+            <div class="mb-3 col-lg-6">
+                <label for="customerName">Customer Address</label>
+                <input class="form-control" id="customerAddress" name="customerAddress" placeholder="Customer Address"
+                       required type="text">
+            </div>
+        </div>
+
+        <!-- Discount Type -->
+        <div class="mb-3">
+            <label for="discountType">Discount Type</label><br>
+            <div class="form-check form-check-inline">
+                <input checked class="form-check-input" id="flatDiscount" name="discountType" type="radio" value="flat">
+                <label class="form-check-label" for="flatDiscount">Flat Discount</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" id="percentageDiscount" name="discountType" type="radio"
+                       value="percentage">
+                <label class="form-check-label" for="percentageDiscount">Percentage Discount</label>
+            </div>
+        </div>
+
+        <div class="text-center mb-3">
+            <button class="btn btn-primary" id="addBtn" type="button">Add Items</button>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+
+        <!-- Item Details -->
+        <div class="item-details">
+
+        </div>
+    </form>
+</div>
+{% endblock %}
+<!-- Include Bootstrap JS and jQuery -->
+{% block js %}
+<script>
+    function get_user(){
+        var selectedValue = $('#party').val();
+        $('#customerEmail').val('')
+        $('#customerPhone').val('')
+        $('#customerAddress').val('')
+
+        $.ajax({
+            url: '/get-user/',
+            method: 'GET',
+            // contentType: 'application/json',
+            data: {'id':selectedValue},
+            success: function (response) {
+                var responseData = response;
+
+                $('#customerEmail').val(responseData.email)
+                $('#customerPhone').val(responseData.contact)
+                $('#customerAddress').val(responseData.address + ' ' +', Pincode ' +responseData.pincode)
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error here
+                console.log(error);
+            }
+        });
+    }
+
+</script>
+
+<script>
+        $(document).ready(function () {
+            let itemIndex = 0;
+
+            // Handle click on "Add" button
+            $("#addBtn").on("click", function () {
+                itemIndex++;
+
+            // Create a new item details form section
+            const newItem = `<div class="row remove_tr${itemIndex} mb-3">
+                                <div class="col-md-2">
+                                  <label for="item${itemIndex}">Item</label>
+                                  <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" required>
+                                    <input type="hidden" id="product_id${itemIndex}" name="product_id" value="">
+                                </div>
+                                <div class="col-md-2">
+                                  <label for="sale_qty${itemIndex}">Quantity</label>
+                                  <input onkeyup="add_qty('${itemIndex}');" type="number" class="form-control item-quantity" name="sale_qty" id="sale_qty${itemIndex}" placeholder="Quantity" required>
+                                </div>
+                                <div class="col-md-2">
+                                  <label for="closeStock${itemIndex}">closeStock</label>
+                                  <input type="number" class="form-control item-quantity" name="closeStock" id="closeStock${itemIndex}" required readonly>
+                                </div>
+                                <div class="col-md-2">
+                                  <label for="price${itemIndex}">Price</label>
+                                  <input type="number" class="form-control item-price" name="price" id="price${itemIndex}" placeholder="Price" required readonly>
+                                </div>
+                                <div class="col-md-2">
+                                  <label for="discount${itemIndex}">Discount</label>
+                                  <div class="input-group">
+                                    <input onkeyup="add_discount('${itemIndex}');" type="number" class="form-control item-discount" name="discount" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
+                                    <span class="input-group-text" id="discount-addon"><input onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>
+                                    <input type="hidden" value="" id="type_discount${itemIndex}" name="type_discount">
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="subTotal${itemIndex}">Subtotal</label>
+                                    <div class="input-group">
+                                      <input type="number" class="form-control item-subtotal" name="subtotal" id="subtotal${itemIndex}" placeholder="Subtotal" readonly>
+                                      <span class="input-group-text" id="discount-addon" style="border-color:red;"><input onclick="remove_row('${itemIndex}');" type="checkbox" id="remove_tr${itemIndex}"></span>
+                                    </div>
+                                </div>
+                            </div>`;
+
+                // Append the new item details section to the form
+                $(".item-details").append(newItem);
+
+            });
+        });
+
+        function remove_row(id){
+            $('.remove_tr'+id).remove();
+        }
+
+</script>
+
+
+<script>
+     function get_product(indexID) {
+
+        var code = $('#product'+indexID).val()
+        //console.log(code,'===============code')
+        $.ajax({
+          url: '/product/search-product/',
+          type: 'Get',
+          data: { 'code': code },
+          success: function (result) {
+            if (result.length > 0) {
+              var pro_id = result.product['p_id']
+              var pro_name = result.product['p_name']
+              var pro_code = result.product['p_code']
+              var qty = result.product['p_qty']
+              var product_sale_price = result.product['p_sale_price']
+
+              $('#product'+indexID).val(pro_code+' '+pro_name)
+              $('#product_id'+indexID).val(pro_id)
+              $('#closeStock'+indexID).val(qty)
+              $('#price'+indexID).val(product_sale_price)
+
+            }
+            //console.log(result.product['p_name'],result.product['p_qty'],'==========================response')
+          },
+          error: function (xhr, errmsg, err) {
+            // Handle the error
+            console.log(xhr.status + ": " + xhr.responseText);
+          }
+        });
+      }
+
+</script>
+
+<script>
+    function add_qty(indexID) {
+      var pro_id = $('#product_id'+indexID).val();
+
+      if (pro_id != '') {
+
+            var sale_qty = parseInt($('#sale_qty'+indexID).val());
+            var closeStock = parseInt($('#closeStock'+indexID).val());
+
+            if(sale_qty > closeStock){
+              $('#sale_qty'+indexID).val(0)
+              $('#subtotal'+indexID).val(0)
+              alert('sale quantity should be less or equal to close stock');
+              return false;
+            }
+            else{
+              var sale_qty = Math.round(sale_qty);
+              var price = parseInt($('#price'+indexID).val());
+              subTotal = sale_qty * price
+              //console.log(subTotal,'===================subTotal')
+              $('#subtotal'+indexID).val(subTotal);
+            }
+
+      }
+      else {
+        alert('please first select product')
+        $('#sale_qty'+indexID).val(0);
+        return false;
+      }
+
+    }
+
+</script>
+
+<script>
+    function apply_discount(indexID) {
+
+      var pro_id = $('#product_id'+indexID).val();
+
+      if (pro_id != '') {
+
+        var dis = parseInt($('#discount'+indexID).val());
+
+        //alert(dis,'================dis')
+
+        if(dis < 1 || dis == NaN){
+            $('#discount_checkbox'+indexID).prop('checked', false);
+            alert('first enter discount than apply')
+        }
+        else{
+            var subTotal = parseInt($('#subtotal'+indexID).val());
+            //console.log(subTotal,'===============subTotal')
+
+            var discount = parseInt($('#discount'+indexID).val());
+            var discount_checked = $('#discount_checkbox'+indexID).prop('checked');
+
+            //console.log(discount,'===============discount')
+            //console.log(discount_checked,'===============discount_checked')
+
+            discount_type = $("input[name='discountType']:checked").val();
+            if(discount){
+                if(discount_checked == true){
+                    if(discount_type == 'percentage'){
+                        var sub_total = subTotal - ((subTotal / 100) * discount)
+                        //console.log(sub_total,'===============sub_total')
+                        $('#subtotal'+indexID).val(sub_total);
+                        $('#type_discount'+indexID).val(discount_type)
+                        $('#discount'+indexID).prop('readonly', true)
+
+                    }else{
+                        var sub_total = subTotal - discount
+                        //console.log(sub_total,'===============sub_total')
+                        $('#subtotal'+indexID).val(sub_total);
+                        $('#type_discount'+indexID).val(discount_type)
+                        $('#discount'+indexID).prop('readonly', true)
+
+                    }
+                }else{
+                    $('#discount'+indexID).val('');
+                    var sale_qty = parseInt($('#sale_qty'+indexID).val());
+                    var price = parseInt($('#price'+indexID).val());
+                    subTotal = sale_qty * price
+                    //console.log(subTotal,'===================subTotal')
+                    $('#subtotal'+indexID).val(subTotal);
+                    $('#discount'+indexID).prop('readonly', false)
+                }
+            }
+        }
+      }
+      else {
+        $('#discount_checkbox'+indexID).prop('checked', false);
+        alert('please first select product')
+        return false;
+      }
+    }
+</script>
+
+<script>
+    function add_discount(indexID){
+      var pro_id = $('#product_id'+indexID).val();
+
+      if (pro_id != '') {
+            discount_type = $("input[name='discountType']:checked").val();
+            var discount = parseInt($('#discount'+indexID).val());
+            var sub_total = parseInt($('#subtotal'+indexID).val());
+
+            if (discount_type == 'percentage'){
+
+                if (discount > 100){
+                    $('#discount'+indexID).val('');
+                    alert('please enter discount less than 100 percent !')
+                    return false;
+                }
+
+            }
+            else{
+                if (discount > sub_total){
+                    $('#discount'+indexID).val('');
+                    alert('please enter discount less than subtotal !');
+                    return false;
+                }
+            }
+
+      }else{
+            $('#discount'+indexID).val('');
+            alert('please first select product');
+            return false;
+       }
+
+    }
+
+</script>
+{% endblock js %}

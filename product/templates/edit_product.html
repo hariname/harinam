@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block container %}
+<div class="container">
+    <h1 class="text-center cursiv-title">Edit Product</h1>
+    <form method="post">{% csrf_token %}
+        <div class="row">
+            <div class="mb-3 form-group col-lg-4">
+                <label for="productName">Product Name:</label>
+                <input value="{{product.product_name}}" class="form-control" id="productName" name="productName" placeholder="Enter product name" type="text" style="text-transform: uppercase;">
+            </div>
+            <div class="mb-3 form-group col-lg-4">
+                <label for="productCode">Product Code:</label>
+                <input value="{{product.code}}" class="form-control" id="productCode" name="productCode" placeholder="Enter product code" type="text" style="text-transform: uppercase;">
+            </div>
+
+            <div class="mb-3 form-group col-lg-4">
+                <label for="productCategory">Product Category:</label>
+                <select class="form-control" id="productCategory" name="productCategory">
+                    {% if product.category %}
+                    <option value="{{product.category_id}}">{{product.category}}</option>
+                    {% endif %}
+
+                    {% for category in category %}
+                    <option value="{{category.id}}">{{category.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3 form-group">
+            <label for="productDescription">Product Description:</label>
+            <textarea class="form-control" id="productDescription" name="productDescription" placeholder="Enter product description" rows="3">{{product.desc}}</textarea>
+        </div>
+
+        <div class="row">
+            <div class="mb-3 form-group col-lg-3">
+                <label for="purchasePrice">Purchase Price:</label>
+                <input value="{{product.purchase_price}}" class="form-control" id="purchasePrice" name="purchasePrice" placeholder="Enter Purchase price" type="number">
+            </div>
+            <div class="mb-3 form-group col-lg-3">
+                <label for="salePrice">Sale Price:</label>
+                <input value="{{product.sale_price}}" class="form-control" id="salePrice" name="salePrice" placeholder="Enter sale price" type="number">
+            </div>
+            <div class="mb-3 form-group col-lg-3">
+                <label>Open Stock:</label>
+                <input value="{{product.open_stock}}" class="form-control" type="number" readonly>
+            </div>
+            <div class="mb-3 form-group col-lg-3">
+                <label>Close Stock:</label>
+                <input value="{{product.present_stock}}" class="form-control" type="number" readonly>
+            </div>
+            <div class="mb-3 form-group col-lg-3">
+                <label for="addStock">Add Stock:</label>
+                <input class="form-control" id="addStock" name="addStock" placeholder="Add stock" type="number">
+            </div>
+        </div>
+
+<!--        <div class="row">-->
+<!--            <div class="mb-3 form-group col-lg-6">-->
+<!--                <label for="productImage">Product Image:</label>-->
+<!--                <input class="form-control" id="productImage" name="productImage" type="file">-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="text-center">
+            <button class="btn btn-primary w-25" type="submit">Submit</button>
+        </div>
+
+    </form>
+</div>
+{% endblock %}
+<!-- Include Bootstrap JS and jQuery -->
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+{% endblock js %}
