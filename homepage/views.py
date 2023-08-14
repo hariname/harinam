@@ -11,6 +11,9 @@ from product.models import Product, TransactionHistory, TransactionDetails
 def view_invoice(request, id=None):
     if id is not None:
         invoice_detail = TransactionHistory.objects.get(id=id)
+        party = invoice_detail.party
+        party_add = invoice_detail.party.address
+        cash_credit = invoice_detail.cash_credit
         invoice_no = invoice_detail.invoice_number
         invoice_date = invoice_detail.date
         invoice = TransactionDetails.objects.filter(trans_history_id=id)
@@ -34,11 +37,14 @@ def view_invoice(request, id=None):
 
             data_list.append(data_dict)
         context = {
+            'cash_credit': cash_credit,
+            'party': party,
+            'party_add': party_add,
             'invoice_no': invoice_no,
             'invoice_date': invoice_date,
             'data_list': data_list,
             'invoice': invoice,
-            'total_price':total_price,
+            'total_price': total_price,
         }
         return render(request, 'invoice_view.html', context)
     else:
@@ -61,9 +67,11 @@ def generateBILL(request):
         type_discount = form.getlist('type_discount')
         discount = form.getlist('discount')
         subtotal = form.getlist('subtotal')
+        cash_credit = form.get('cash_type')
 
         trans_id = TransactionHistory.objects.create(invoice_number=str(datetime.now().strftime("%H%M%S")),
-                                                     party_id=party)
+                                                     party_id=party,
+                                                     cash_credit=cash_credit)
 
         if trans_id:
             for i in range(len(product_id)):

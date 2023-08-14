@@ -46,7 +46,20 @@
                        value="percentage">
                 <label class="form-check-label" for="percentageDiscount">Percentage Discount</label>
             </div>
+<!--            #&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;cash credit-->
+            <div class="form-check form-check-inline">
+                <input checked class="form-check-input" id="cash" name="cash_credit" type="radio">
+                <label class="form-check-label" for="cash">Cash</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" id="credit" name="cash_credit" type="radio">
+                <label class="form-check-label" for="credit">Credit</label>
+            </div>
+            <input type="hidden" name="cash_type" value="" id="cash_type">
         </div>
+
+
 
         <div class="text-center mb-3">
             <button class="btn btn-primary" id="addBtn" type="button">Add Items</button>
@@ -57,11 +70,26 @@
         <div class="item-details">
 
         </div>
+
     </form>
 </div>
 {% endblock %}
 <!-- Include Bootstrap JS and jQuery -->
 {% block js %}
+<script>
+    $(document).ready(function(){
+        $('#cash_type').val('Cash');
+       $('#cash').click(function(){
+            $('#cash_type').val('');
+            $('#cash_type').val('Cash');
+       })
+
+       $('#credit').click(function(){
+            $('#cash_type').val('');
+            $('#cash_type').val('Credit');
+       })
+    })
+</script>
 <script>
     function get_user(){
         var selectedValue = $('#party').val();
@@ -310,8 +338,11 @@
             alert('please first select product');
             return false;
        }
-
     }
+
+</script>
+
+<script>
 
 </script>
 {% endblock js %}

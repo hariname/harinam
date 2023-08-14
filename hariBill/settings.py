@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-
+from mysql import connector
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -68,23 +68,23 @@ WSGI_APPLICATION = 'hariBill.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django',
-        'NAME': 'hariBill',
-        'USER': 'harinam',
-        'PASSWORD': 'qwerty123',
-        'HOST': '68.178.149.80',  # Usually 'localhost'
-        'PORT': '3306',  # Default MySQL port is 3306
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'mysql.connector.django',
+#         'NAME': 'hariBill',
+#         'USER': 'harinam',
+#         'PASSWORD': 'qwerty123',
+#         'HOST': '68.178.149.80',  # Usually 'localhost'
+#         'PORT': '3306',  # Default MySQL port is 3306
+#     }
+# }
 
 
 # Password validation

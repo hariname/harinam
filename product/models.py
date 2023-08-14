@@ -33,6 +33,7 @@ class TransactionHistory(models.Model):
     invoice_number = models.CharField(max_length=20, default='12345')
     party = models.ForeignKey(Party, on_delete=models.PROTECT)
     date = models.DateTimeField(auto_now_add=True, null=True)
+    cash_credit = models.CharField(max_length=20, default='Cash')
 
     def __str__(self):
         return self.invoice_number
