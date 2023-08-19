@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from mysql import connector
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -14,7 +13,7 @@ SECRET_KEY = 'django-insecure-@c3w8mp3pqbd93-ly&va-1tu31e8x-_fvpl7-od6)@w!konw8@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', 'pyarovrindavan.com', 'www.pyarovrindavan.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -26,11 +25,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mathfilters',
     'homepage',
     'product',
     'party',
-    'wkhtmltopdf',
     
 ]
 
@@ -75,17 +72,17 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'mysql.connector.django',
-#         'NAME': 'hariBill',
-#         'USER': 'harinam',
-#         'PASSWORD': 'qwerty123',
-#         'HOST': '68.178.149.80',  # Usually 'localhost'
-#         'PORT': '3306',  # Default MySQL port is 3306
-#     }
-# }
 
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.mysql',
+# 		'NAME': 'sanjay_hariBill',
+# 		'USER': 'sanjay_hariuser',
+# 		'PASSWORD': 'qwerty123QWERTY',
+# 		'HOST':'localhost',
+# 		'PORT':'3306',
+# 	}
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
