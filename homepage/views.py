@@ -1,12 +1,20 @@
 import csv
 from datetime import datetime
-
+import datetime
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from party.models import Party
 from product.models import Product, TransactionHistory, TransactionDetails
 
+
+def convert_date(date_string, output_format='%Y-%m-%d'):
+    try:
+        date_object = datetime.datetime.strptime(date_string, '%Y-%m-%d')
+        formatted_date = date_object.strftime(output_format)
+        return formatted_date
+    except:
+        return datetime.now().strftime('%Y-%m-%d')
 
 def view_invoice(request, id=None):
     if id is not None:
@@ -60,8 +68,7 @@ def generateBILL(request):
         form = request.POST
         party = form.get('party')
         bill_date = form.get('bill_date')
-        bill_date = datetime.now().strftime("%Y-%M-%D %H:%M:S")
-        print(bill_date,'=====================bill_date')
+        bill_date = convert_date(bill_date)
         product_id = form.getlist('product_id')
         sale_qty = form.getlist('sale_qty')
         closeStock = form.getlist('closeStock')
@@ -74,7 +81,8 @@ def generateBILL(request):
 
         trans_id = TransactionHistory.objects.create(invoice_number=str(datetime.now().strftime("%H%M%S")),
                                                      party_id=party,
-                                                     cash_credit=cash_credit)
+                                                     cash_credit=cash_credit,
+                                                     date=bill_date)
 
         if trans_id:
             for i in range(len(product_id)):
@@ -101,6 +109,7 @@ def generateBILL(request):
                                                   close_stock=present_stock,
                                                   sale_amt=sale_amt,
                                                   pur_amt=pur_amt,
+                                                  date=bill_date,
                                                   )
 
                 Product.objects.filter(id=product_id[i]).update(present_stock=present_stock)
