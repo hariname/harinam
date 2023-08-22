@@ -35,7 +35,8 @@
         </div>
 
         <!-- Discount Type -->
-        <div class="mb-3">
+        <div class="row">
+        <div class="mb-3 col-lg-6">
             <label for="discountType">Discount Type</label><br>
             <div class="form-check form-check-inline">
                 <input checked class="form-check-input" id="flatDiscount" name="discountType" type="radio" value="flat">
@@ -51,15 +52,20 @@
                 <input checked class="form-check-input" id="cash" name="cash_credit" type="radio">
                 <label class="form-check-label" for="cash">Cash</label>
             </div>
-
+            <input type="hidden" name="cash_type" value="" id="cash_type">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" id="credit" name="cash_credit" type="radio">
                 <label class="form-check-label" for="credit">Credit</label>
             </div>
-            <input type="hidden" name="cash_type" value="" id="cash_type">
+
+
         </div>
 
-
+        <div class="col-lg-4">
+            <label class="" for="bill_date">Bill Date</label>
+            <input class="form-control" id="bill_date" name="bill_date" type="text">
+        </div>
+        </div>
 
         <div class="text-center mb-3">
             <button class="btn btn-primary" id="addBtn" type="button">Add Items</button>
@@ -149,7 +155,9 @@
                                 <div class="col-md-2">
                                   <label for="discount${itemIndex}">Discount</label>
                                   <div class="input-group">
-                                    <input onkeyup="add_discount('${itemIndex}');" type="number" class="form-control item-discount" name="discount" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
+                                    <input type="text" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0">
+                                    <input onkeyup="add_discount('${itemIndex}');" type="number" class="form-control item-discount" name="discount" value="0" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
+
                                     <span class="input-group-text" id="discount-addon"><input onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>
                                     <input type="hidden" value="" id="type_discount${itemIndex}" name="type_discount">
                                   </div>
@@ -272,22 +280,32 @@
             discount_type = $("input[name='discountType']:checked").val();
             if(discount){
                 if(discount_checked == true){
+                    var pre_subtotal = subTotal
                     if(discount_type == 'percentage'){
                         var sub_total = subTotal - ((subTotal / 100) * discount)
                         //console.log(sub_total,'===============sub_total')
                         $('#subtotal'+indexID).val(sub_total);
+                        var dis_price = $('#discount_price'+indexID).val(parseInt(pre_subtotal) - parseInt(sub_total));
+                        console.log(dis_price,'--------------dis_price')
                         $('#type_discount'+indexID).val(discount_type)
                         $('#discount'+indexID).prop('readonly', true)
 
                     }else{
                         var sub_total = subTotal - discount
                         //console.log(sub_total,'===============sub_total')
+
+                        var dis_price = $('#discount_price'+indexID).val(parseInt(pre_subtotal) - parseInt(sub_total));
+                        console.log(dis_price,'--------------dis_price')
+
                         $('#subtotal'+indexID).val(sub_total);
                         $('#type_discount'+indexID).val(discount_type)
                         $('#discount'+indexID).prop('readonly', true)
 
+
+
                     }
                 }else{
+                    $('#discount_price'+indexID).val(0);
                     $('#discount'+indexID).val('');
                     var sale_qty = parseInt($('#sale_qty'+indexID).val());
                     var price = parseInt($('#price'+indexID).val());
@@ -343,6 +361,6 @@
 </script>
 
 <script>
-
+    $( "#bill_date" ).datepicker();
 </script>
 {% endblock js %}

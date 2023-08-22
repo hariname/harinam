@@ -25,7 +25,7 @@ def add_product(request):
         OpenStock = form.get('OpenStock')
         productImage = form_image.get('productImage')
 
-        product = Product.objects.create(product_name=productName,
+        obj = Product.objects.create(product_name=productName,
                                          code=productCode,
                                          category_id=productCategory,
                                          desc=productDescription,
@@ -35,11 +35,18 @@ def add_product(request):
                                          present_stock=OpenStock,
                                          )
 
-        if product:
-            if productImage:
-                product.image = productImage
-                product.save()
-            return redirect('/product/productLIST/')
+        if obj:
+            msg = 'Product Added Successful!'
+        else:
+            msg = 'Product Add failed.'
+        json_data = {'msg': msg}
+        return JsonResponse(json_data)
+
+        # if product:
+        #     if productImage:
+        #         product.image = productImage
+        #         product.save()
+        #     return redirect('/product/productLIST/')
     else:
         category = Category.objects.all()
         context = {

@@ -1,8 +1,11 @@
+from datetime import datetime
+
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from .models import Party
 
-from datetime import datetime
+
 # Create your views here.
 
 def add_party(request):
@@ -15,14 +18,20 @@ def add_party(request):
         address = form.get('customerAddress')
         pinCode = form.get('pinCode')
 
-        Party.objects.create(customer_name=name.upper(),
-                             phone_no=phone,
-                             address=address,
-                             email=email,
-                             pipcode=pinCode,
-                             date=date)
-        return redirect('/')
-    return render(request, 'add_party.html')
+        obj = Party.objects.create(customer_name=name.upper(),
+                                   phone_no=phone,
+                                   address=address,
+                                   email=email,
+                                   pipcode=pinCode,
+                                   date=date)
+        if obj:
+            msg = 'Party Registration Successful!'
+        else:
+            msg = 'Party registration failed.'
+        json_data = {'msg': msg}
+        return JsonResponse(json_data)
+    else:
+        return render(request, 'add_party.html')
 
 
 def edit_party(request, id):

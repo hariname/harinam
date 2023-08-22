@@ -31,10 +31,6 @@
 
             </div>
 
-
-
-
-
             <div class="text-center mb-3">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
@@ -46,7 +42,52 @@
         </form>
     </div>
 {% endblock %}
-    <!-- Include Bootstrap JS and jQuery -->
+
 {% block js %}
+
+
+<script>
+
+    $(document).ready(function() {
+    $('#PartyForm').submit(function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        // Serialize the form data
+        var formData = $(this).serialize();
+
+        // Make the POST request using Ajax
+        $.ajax({
+            url: '/party/add-party/',
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Extract CSRF token from meta tag
+            },
+            data: formData,
+            success: function(response) {
+                console.log(response);
+                setTimeout(function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: response.msg,
+                        text: 'You have been registered successfully.',
+                        confirmButtonText: 'OK'
+
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Reload the page
+                            location.reload();
+                        }
+                    });
+                }, 500); // Simulate a delay of 0.5 second
+            },
+            error: function(xhr, status, error) {
+                // Request failed, handle the error here
+                console.error('Request failed with status:', status);
+            }
+        });
+    });
+});
+
+</script>
 
 {% endblock js %}

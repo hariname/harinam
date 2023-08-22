@@ -59,13 +59,16 @@ def generateBILL(request):
     if request.method == 'POST':
         form = request.POST
         party = form.get('party')
-
+        bill_date = form.get('bill_date')
+        bill_date = datetime.now().strftime("%Y-%M-%D %H:%M:S")
+        print(bill_date,'=====================bill_date')
         product_id = form.getlist('product_id')
         sale_qty = form.getlist('sale_qty')
         closeStock = form.getlist('closeStock')
         price = form.getlist('price')
         type_discount = form.getlist('type_discount')
         discount = form.getlist('discount')
+        discount_price = form.getlist('discount_price')
         subtotal = form.getlist('subtotal')
         cash_credit = form.get('cash_type')
 
@@ -81,14 +84,8 @@ def generateBILL(request):
                 pur_rate = int(product_data.purchase_price)
                 sale_price = int(product_data.sale_price)
                 sale_amt = int(sale_qty[i]) * sale_price
-                pur_amt = int(sale_qty[i]) * pur_rate
-
-                # print(open_stock, '==============open_stock')
-                # print(present_stock, '==============present_stock')
-                # print(pur_rate, '==============pur_rate')
-                # print(sale_price, '==============sale_price')
-                # print(sale_amt, '==============sale_amt')
-                # print(pur_amt, '==============pur_amt')
+                # pur_amt = int(sale_qty[i]) * pur_rate
+                pur_amt = present_stock * pur_rate
 
                 TransactionDetails.objects.create(trans_history_id=trans_id.id,
                                                   product_id=product_id[i],
@@ -96,6 +93,7 @@ def generateBILL(request):
                                                   base_price=price[i],
                                                   discount_type=type_discount[i],
                                                   discount=discount[i],
+                                                  discount_price=discount_price[i],
                                                   net_sale=subtotal[i],
                                                   pur_rate=pur_rate,
                                                   sale_rate=sale_price,

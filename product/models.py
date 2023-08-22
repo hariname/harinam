@@ -47,6 +47,7 @@ class TransactionDetails(models.Model):
     base_price = models.DecimalField(max_digits=10, decimal_places=2)
     discount_type = models.CharField(max_length=10, default='FLAT')
     discount = models.IntegerField(default=0)
+    discount_price = models.IntegerField(default=0)
     net_sale = models.DecimalField(max_digits=12, decimal_places=2)
 
     pur_rate = models.DecimalField(max_digits=12, decimal_places=2)
