@@ -1,6 +1,6 @@
 import csv
 
-import datetime
+from datetime import datetime
 import time
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
