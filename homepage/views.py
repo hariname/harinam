@@ -9,7 +9,7 @@ from product.models import Product, TransactionHistory, TransactionDetails
 
 
 def convert_date(date_string, output_format='%Y-%m-%d'):
-    try:
+    
         date_object = datetime.datetime.strptime(date_string, '%Y-%m-%d')
         formatted_date = date_object.strftime(output_format)
         return formatted_date
