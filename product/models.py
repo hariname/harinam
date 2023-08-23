@@ -6,7 +6,6 @@ from party.models import Party
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=50, null=True)
-    title = models.CharField(max_length=50, null=True, blank=True, default='')
     desc = models.TextField(null=True)
     date = models.DateTimeField(auto_now_add=True, null=True)
 

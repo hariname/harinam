@@ -1,5 +1,4 @@
 import csv
-
 from datetime import datetime
 
 from django.http import HttpResponse, JsonResponse
@@ -10,56 +9,9 @@ from product.models import Product, TransactionHistory, TransactionDetails
 
 
 def convert_date(date_string, output_format='%Y-%m-%d'):
-    
-        date_object = datetime.strptime(date_string, '%Y-%m-%d')
-        formatted_date = date_object.strftime(output_format)
-        return formatted_date
-    
-def view_invoice(request, id=None):
-    if id is not None:
-        invoice_detail = TransactionHistory.objects.get(id=id)
-        party = invoice_detail.party
-        party_add = invoice_detail.party.address
-        cash_credit = invoice_detail.cash_credit
-        invoice_no = invoice_detail.invoice_number
-        invoice_date = invoice_detail.date
-        invoice = TransactionDetails.objects.filter(trans_history_id=id)
-        data_list = []
-        total_price = 0
-        for i in invoice:
-            data_dict = {}
-            data_dict['invoice'] = i.trans_history.invoice_number
-            data_dict['code'] = i.product.code
-            data_dict['product_name'] = i.product.product_name
-            data_dict['sale_qty'] = i.sale_qty
-            data_dict['base_price'] = i.base_price
-            data_dict['discount_type'] = i.discount_type
-            data_dict['discount'] = i.discount
-            data_dict['net_sale'] = i.net_sale
-            data_dict['sale_rate'] = i.sale_rate
-            data_dict['sale_amt'] = i.sale_amt
-            data_dict['date'] = i.date
-            data_dict['party'] = i.trans_history.party
-            total_price += data_dict['net_sale']
-
-            data_list.append(data_dict)
-        context = {
-            'cash_credit': cash_credit,
-            'party': party,
-            'party_add': party_add,
-            'invoice_no': invoice_no,
-            'invoice_date': invoice_date,
-            'data_list': data_list,
-            'invoice': invoice,
-            'total_price': total_price,
-        }
-        return render(request, 'invoice_view.html', context)
-    else:
-        invoice = TransactionHistory.objects.all().order_by('-id')[:25]
-        context = {
-            'invoice': invoice,
-        }
-        return render(request, 'invoice_template.html', context)
+    date_object = datetime.strptime(date_string, '%Y-%m-%d')
+    formatted_date = date_object.strftime(output_format)
+    return formatted_date
 
 
 def generateBILL(request):
@@ -112,14 +64,78 @@ def generateBILL(request):
                                                   )
 
                 Product.objects.filter(id=product_id[i]).update(present_stock=present_stock)
-            return redirect('/')
+            return redirect(f'/view-invoice/{trans_id.id}/')
     else:
         party = Party.objects.all()
         context = {'party': party, }
         return render(request, 'generateBILL.html', context)
 
 
-# Create your views here.
+def view_invoice(request, id=None):
+    if id is not None:
+        invoice_detail = TransactionHistory.objects.get(id=id)
+        party = invoice_detail.party
+        party_add = invoice_detail.party.address
+        cash_credit = invoice_detail.cash_credit
+        invoice_no = invoice_detail.invoice_number
+        invoice_date = invoice_detail.date
+        invoice = TransactionDetails.objects.filter(trans_history_id=id)
+        data_list = []
+        total_price = 0
+        for i in invoice:
+            data_dict = {}
+            data_dict['invoice'] = i.trans_history.invoice_number
+            data_dict['code'] = i.product.code
+            data_dict['product_name'] = i.product.product_name
+            data_dict['sale_qty'] = i.sale_qty
+            data_dict['base_price'] = i.base_price
+            data_dict['discount_type'] = i.discount_type
+            data_dict['discount'] = i.discount
+            data_dict['net_sale'] = i.net_sale
+            data_dict['sale_rate'] = i.sale_rate
+            data_dict['sale_amt'] = i.sale_amt
+            data_dict['date'] = i.date
+            data_dict['party'] = i.trans_history.party
+            total_price += data_dict['net_sale']
+
+            data_list.append(data_dict)
+        context = {
+            'bill_id': id,
+            'cash_credit': cash_credit,
+            'party': party,
+            'party_add': party_add,
+            'invoice_no': invoice_no,
+            'invoice_date': invoice_date,
+            'data_list': data_list,
+            'invoice': invoice,
+            'total_price': total_price,
+        }
+        return render(request, 'invoice_view.html', context)
+    else:
+        invoice = TransactionHistory.objects.all().order_by('-id')[:25]
+        context = {
+            'invoice': invoice,
+        }
+        return render(request, 'invoice_template.html', context)
+
+
+def edit_bill(request, bill_id):
+    trans_detail = TransactionHistory.objects.get(id=bill_id)
+    date = trans_detail.date
+    cash_credit = trans_detail.cash_credit
+    party_details = trans_detail.party
+
+    items_detail = TransactionDetails.objects.filter(trans_history_id=bill_id)
+    context = {
+        'bill_id': bill_id,
+        'date': date,
+        'cash_credit': cash_credit,
+        'party_details': party_details,
+        'items_detail': items_detail,
+    }
+    return render(request, 'edit_bill.html', context)
+
+
 def transactionHISTORY(request):
     transaction = TransactionDetails.objects.all()
 
