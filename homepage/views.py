@@ -13,9 +13,7 @@ def convert_date(date_string, output_format='%Y-%m-%d'):
         date_object = datetime.datetime.strptime(date_string, '%Y-%m-%d')
         formatted_date = date_object.strftime(output_format)
         return formatted_date
-    except:
-        return datetime.now().strftime('%Y-%m-%d')
-
+    
 def view_invoice(request, id=None):
     if id is not None:
         invoice_detail = TransactionHistory.objects.get(id=id)
