@@ -122,7 +122,6 @@
         <div class="col-lg-2 mx-auto btn btn-sm btn-success m-1" id="Mail">Send Mail</div>
         <div class="col-lg-2 mx-auto btn btn-sm btn-secondary m-1" id="Print">Print</div>
     </div>
-    <p class="note text-center">Thank you for your business!</p>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -130,6 +129,11 @@
 <script>
     $('#edit_Bill').click(function(){
         window.location.href = '/edit-bill/'+{{bill_id}}+'/';
+    })
+
+    $('#Print').click(function(){
+        $('#edit_Bill, #download, #Mail, #Print').hide();
+        window.print();
     })
 </script>
 </body>
