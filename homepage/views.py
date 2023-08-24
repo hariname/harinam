@@ -141,7 +141,15 @@ def edit_bill(request, bill_id):
                                                                         cash_credit=cash_credit,
                                                                         date=bill_date)
 
+
+        detail = TransactionDetails.objects.filter(trans_history_id=bill_id)
+        for i in detail:
+            qty = Product.objects.get(id=i.product.id)
+            qty= int(qty.present_stock) + int(i.sale_qty)
+            Product.objects.filter(id=i.product.id).update(present_stock=qty)
+
         TransactionDetails.objects.filter(trans_history_id=bill_id).delete()
+
         if trans_id:
             for i in range(len(product_id)):
                 product_data = Product.objects.get(id=product_id[i])
@@ -150,7 +158,6 @@ def edit_bill(request, bill_id):
                 pur_rate = int(product_data.purchase_price)
                 sale_price = int(product_data.sale_price)
                 sale_amt = int(sale_qty[i]) * sale_price
-                # pur_amt = int(sale_qty[i]) * pur_rate
                 pur_amt = present_stock * pur_rate
 
                 TransactionDetails.objects.create(trans_history_id=bill_id,
@@ -180,7 +187,6 @@ def edit_bill(request, bill_id):
         party_details = trans_detail.party
 
         items_detail = TransactionDetails.objects.filter(trans_history_id=bill_id)
-        print(items_detail,'=====items_detail')
         context = {
             'bill_id': bill_id,
             'date': date,
