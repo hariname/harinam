@@ -44,7 +44,7 @@
             </div>
             <div class="form-check form-check-inline">
                 <input checked class="form-check-input" id="percentageDiscount" name="discountType" type="radio"
-                       value="percentage">
+                       value="Percent">
                 <label class="form-check-label" for="percentageDiscount">Percentage Discount</label>
             </div>
 <!--            #&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;cash credit-->
@@ -281,7 +281,7 @@
             if(discount){
                 if(discount_checked == true){
                     var pre_subtotal = subTotal
-                    if(discount_type == 'percentage'){
+                    if(discount_type == 'Percent'){
                         var sub_total = subTotal - ((subTotal / 100) * discount)
                         //console.log(sub_total,'===============sub_total')
                         $('#subtotal'+indexID).val(sub_total);
@@ -334,7 +334,7 @@
             var discount = parseInt($('#discount'+indexID).val());
             var sub_total = parseInt($('#subtotal'+indexID).val());
 
-            if (discount_type == 'percentage'){
+            if (discount_type == 'Percent'){
 
                 if (discount > 100){
                     $('#discount'+indexID).val('');

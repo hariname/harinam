@@ -78,27 +78,27 @@
         <table class="table text-center">
             <thead>
             <tr>
-                <th>S.No</th>
-                <th>Code</th>
-                <th>Item Name</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Discount Type</th>
-                <th>Discount</th>
-                <th>Total Price</th>
+                <th style="padding:5px;">S.No</th>
+                <th style="padding:5px;">Code</th>
+                <th style="padding:5px;">Item Name</th>
+                <th style="padding:5px;">Quantity</th>
+                <th style="padding:5px;">Unit Price</th>
+                <th style="padding:5px;">Discount Type</th>
+                <th style="padding:5px;">Discount</th>
+                <th style="padding:5px;">Total Price</th>
             </tr>
             </thead>
             <tbody>
             {% for item in data_list %}
             <tr style="text-align:center;">
-                <td>{{ forloop.counter }}</td>
-                <td>{{item.code}}</td>
-                <td><p>{{item.product_name}}</p></td>
-                <td>{{item.sale_qty}}</td>
-                <td>1*{{item.base_price}}</td>
-                <td>{% if item.discount_type %}{{item.discount_type}}{% else %}No Discount {% endif %}</td>
-                <td>{{item.discount}}</td>
-                <td>Rs.{{item.net_sale}}</td>
+                <td style="padding:5px;">{{ forloop.counter }}</td>
+                <td style="padding:5px;">{{item.code}}</td>
+                <td style="padding:5px;"><p>{{item.product_name}}</p></td>
+                <td style="padding:5px;">{{item.sale_qty}}</td>
+                <td style="padding:5px;">1*{{item.base_price}}</td>
+                <td style="padding:5px;">{% if item.discount_type %}{{item.discount_type}}{% else %}No Discount {% endif %}</td>
+                <td style="padding:5px;">{{item.discount}}</td>
+                <td style="padding:5px;">Rs.{{item.net_sale}}</td>
             </tr>
 
             {% endfor %}
@@ -112,32 +112,7 @@
             </tfoot>
         </table>
     </div>
-
-    <div class="row col-lg-6 mx-auto mt-5">
-        <div class="col-lg-3 mx-auto btn btn-sm btn-primary m-1" id="edit_Bill">Edit Bill</div>
-        <div class="col-lg-3 mx-auto btn btn-sm btn-primary m-1" id="download">Download or Print</div>
-        <div class="col-lg-3 mx-auto btn btn-sm btn-success m-1" id="Mail">Send Mail</div>
-    </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-
-<script>
-    $('#edit_Bill').click(function(){
-        window.location.href = '/edit-bill/'+{{bill_id}}+'/';
-    })
-
-    $('#download').click(function(){
-        var pageUrl = '/generate-pdf/'+{{bill_id}}+'/';
-        window.open(pageUrl, "_blank");
-    })
-</script>
-
 </body>
-
 </html>
 

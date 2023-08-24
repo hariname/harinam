@@ -1,11 +1,14 @@
 import csv
 from datetime import datetime
+from io import BytesIO
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.template.loader import get_template
 from party.models import Party
 from product.models import Product, TransactionHistory, TransactionDetails
+from xhtml2pdf import pisa
 
 
 def convert_date(date_string, output_format='%Y-%m-%d'):
@@ -136,16 +139,16 @@ def edit_bill(request, bill_id):
         subtotal = form.getlist('subtotal')
         cash_credit = form.get('cash_type')
 
-        trans_id = TransactionHistory.objects.filter(id=bill_id).update(invoice_number=str(datetime.now().strftime("%H%M%S")),
-                                                                        party_id=party,
-                                                                        cash_credit=cash_credit,
-                                                                        date=bill_date)
-
+        trans_id = TransactionHistory.objects.filter(id=bill_id).update(
+            invoice_number=str(datetime.now().strftime("%H%M%S")),
+            party_id=party,
+            cash_credit=cash_credit,
+            date=bill_date)
 
         detail = TransactionDetails.objects.filter(trans_history_id=bill_id)
         for i in detail:
             qty = Product.objects.get(id=i.product.id)
-            qty= int(qty.present_stock) + int(i.sale_qty)
+            qty = int(qty.present_stock) + int(i.sale_qty)
             Product.objects.filter(id=i.product.id).update(present_stock=qty)
 
         TransactionDetails.objects.filter(trans_history_id=bill_id).delete()
@@ -254,3 +257,54 @@ def get_user(request):
             'pincode': party.pipcode if party.pipcode else '',
         }
         return JsonResponse(json_data)
+
+
+def generate_pdf(request, id):
+    template_src = 'render_pdf.html'
+    if id is not None:
+        invoice_detail = TransactionHistory.objects.get(id=id)
+        party = invoice_detail.party
+        party_add = invoice_detail.party.address
+        cash_credit = invoice_detail.cash_credit
+        invoice_no = invoice_detail.invoice_number
+        invoice_date = invoice_detail.date
+        invoice = TransactionDetails.objects.filter(trans_history_id=id)
+        data_list = []
+        total_price = 0
+        for i in invoice:
+            data_dict = {}
+            data_dict['invoice'] = i.trans_history.invoice_number
+            data_dict['code'] = i.product.code
+            data_dict['product_name'] = i.product.product_name
+            data_dict['sale_qty'] = i.sale_qty
+            data_dict['base_price'] = i.base_price
+            data_dict['discount_type'] = i.discount_type
+            data_dict['discount'] = i.discount
+            data_dict['net_sale'] = i.net_sale
+            data_dict['sale_rate'] = i.sale_rate
+            data_dict['sale_amt'] = i.sale_amt
+            data_dict['date'] = i.date
+            data_dict['party'] = i.trans_history.party
+            total_price += data_dict['net_sale']
+
+            data_list.append(data_dict)
+
+        context = {
+            'bill_id': id,
+            'cash_credit': cash_credit,
+            'party': party,
+            'party_add': party_add,
+            'invoice_no': invoice_no,
+            'invoice_date': invoice_date,
+            'data_list': data_list,
+            'invoice': invoice,
+            'total_price': total_price,
+        }
+
+        template = get_template(template_src)
+        html = template.render(context)
+        result = BytesIO()
+        pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+        if pdf.err:
+            return HttpResponse("Invalid PDF", status_code=400, content_type='text/plain')
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
