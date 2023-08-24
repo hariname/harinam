@@ -28,8 +28,6 @@ INSTALLED_APPS = [
     'homepage',
     'product',
     'party',
-    'xhtml2pdf',
-    
 ]
 
 MIDDLEWARE = [
