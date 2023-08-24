@@ -7,6 +7,7 @@
         <!-- Customer Details -->
         <div class="row">
             <div class="mb-3 col-lg-6">
+                <input type="hidden" value="{{bill_id}}" name="bill_id">
                 <label for="customerName">Customer Name</label>
                 <select class="form-control" id="party" name="party" onchange="get_user()">
                     <option value="{{party_details.id}}">{{party_details}}</option>
@@ -39,11 +40,11 @@
         <div class="mb-3 col-lg-6">
             <label for="discountType">Discount Type</label><br>
             <div class="form-check form-check-inline">
-                <input checked class="form-check-input" id="flatDiscount" name="discountType" type="radio" value="flat">
+                <input class="form-check-input" id="flatDiscount" name="discountType" type="radio" value="flat">
                 <label class="form-check-label" for="flatDiscount">Flat Discount</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" id="percentageDiscount" name="discountType" type="radio"
+                <input checked class="form-check-input" id="percentageDiscount" name="discountType" type="radio"
                        value="percentage">
                 <label class="form-check-label" for="percentageDiscount">Percentage Discount</label>
             </div>
@@ -86,49 +87,51 @@
 {% block js %}
 
 <script>
-        let itemIndex = 0;
-        {% for item in items_detail %}
-            itemIndex++;
-            const newItem = `<div class="row remove_tr${itemIndex} mb-3">
-                                    <div class="col-md-2">
-                                      <label for="item${itemIndex}">Item</label>
-                                      <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" value="{{item.product}} {{item.product.product_name}}" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" required>
-                                        <input type="hidden" id="product_id${itemIndex}" name="product_id" value="{{item.product.id}}">
-                                    </div>
-                                    <div class="col-md-2">
-                                      <label for="sale_qty${itemIndex}">Quantity</label>
-                                      <input onkeyup="add_qty('${itemIndex}');" type="number" value="{{item.sale_qty}}" class="form-control item-quantity" name="sale_qty" id="sale_qty${itemIndex}" placeholder="Quantity" required>
-                                    </div>
-                                    <div class="col-md-2">
-                                      <label for="closeStock${itemIndex}">closeStock</label>
-                                      <input type="number" value="{{item.close_stock}}" class="form-control item-quantity" name="closeStock" id="closeStock${itemIndex}" required readonly>
-                                    </div>
-                                    <div class="col-md-2">
-                                      <label for="price${itemIndex}">Price</label>
-                                      <input type="number" value="{{item.base_price}}" class="form-control item-price" name="price" id="price${itemIndex}" placeholder="Price" required readonly>
-                                    </div>
-                                    <div class="col-md-2">
-                                      <label for="discount${itemIndex}">Discount</label>
-                                      <div class="input-group">
-                                        <input type="text" value="{{item.discount_price}}" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0">
-                                        <input onkeyup="add_discount('${itemIndex}');" type="number" value="{{item.discount}}" class="form-control item-discount" name="discount" value="0" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
+var itemIndex = 0;
+$(document).ready(function(){
+    {% for item in items_detail %}
+        itemIndex++;
+        var newItem = `<div class="row remove_tr${itemIndex} mb-3">
+                                <div class="col-md-2">
+                                  <label for="item${itemIndex}">Item</label>
+                                  <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" value="{{item.product}} {{item.product.product_name}}" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" required>
+                                    <input type="hidden" id="product_id${itemIndex}" name="product_id" value="{{item.product.id}}">
+                                </div>
+                                <div class="col-md-2">
+                                  <label for="sale_qty${itemIndex}">Quantity</label>
+                                  <input onkeyup="add_qty('${itemIndex}');" type="number" value="{{item.sale_qty}}" class="form-control item-quantity" name="sale_qty" id="sale_qty${itemIndex}" placeholder="Quantity" required>
+                                </div>
+                                <div class="col-md-2">
+                                  <label for="closeStock${itemIndex}">closeStock</label>
+                                  <input type="number" value="{{item.close_stock}}" class="form-control item-quantity" name="closeStock" id="closeStock${itemIndex}" required readonly>
+                                </div>
+                                <div class="col-md-2">
+                                  <label for="price${itemIndex}">Price</label>
+                                  <input type="number" value="{{item.base_price}}" class="form-control item-price" name="price" id="price${itemIndex}" placeholder="Price" required readonly>
+                                </div>
+                                <div class="col-md-2">
+                                  <label for="discount${itemIndex}">Discount</label>
+                                  <div class="input-group">
+                                    <input type="text" value="{{item.discount_price}}" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0">
+                                    <input onkeyup="add_discount('${itemIndex}');" type="number" value="{{item.discount}}" class="form-control item-discount" name="discount" value="0" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
 
-                                        <span class="input-group-text" id="discount-addon"><input onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>
-                                        <input type="hidden" value="{{item.discount_type}}" id="type_discount${itemIndex}" name="type_discount">
-                                      </div>
+                                    <span class="input-group-text" id="discount-addon"><input {% if item.discount_type %} checked {% endif %} onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>
+                                    <input type="hidden" value="{{item.discount_type}}" id="type_discount${itemIndex}" name="type_discount">
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="subTotal${itemIndex}">Subtotal</label>
+                                    <div class="input-group">
+                                      <input type="number" value="{{item.net_sale}}" class="form-control item-subtotal" name="subtotal" id="subtotal${itemIndex}" placeholder="Subtotal" readonly>
+                                          <span class="input-group-text" id="discount-addon" style="border-color:red;"><i class="fa fa-trash-o" style="font-size:15px" onclick="remove_row('${itemIndex}');" id="remove_tr${itemIndex}"></i></span>
                                     </div>
-                                    <div class="col-md-2">
-                                        <label for="subTotal${itemIndex}">Subtotal</label>
-                                        <div class="input-group">
-                                          <input type="number" value="{{item.net_sale}}" class="form-control item-subtotal" name="subtotal" id="subtotal${itemIndex}" placeholder="Subtotal" readonly>
-                                              <span class="input-group-text" id="discount-addon" style="border-color:red;"><i class="fa fa-trash-o" style="font-size:15px" onclick="remove_row('${itemIndex}');" id="remove_tr${itemIndex}"></i></span>
-                                        </div>
-                                    </div>
-                                </div>`;
+                                </div>
+                            </div>`;
 
-                    // Append the new item details section to the form
-                    $(".item-details").append(newItem);
-        {% endfor %}
+                // Append the new item details section to the form
+                $(".item-details").append(newItem);
+    {% endfor %}
+});
 
 </script>
 
@@ -176,60 +179,56 @@
 </script>
 
 <script>
-        $(document).ready(function () {
-            let itemIndex = 0;
 
-            // Handle click on "Add" button
-            $("#addBtn").on("click", function () {
-                itemIndex++;
+    // Handle click on "Add" button
+    $("#addBtn").on("click", function () {
+        itemIndex++;
+        // Create a new item details form section
+        var newItem = `<div class="row remove_tr${itemIndex} mb-3">
+                            <div class="col-md-2">
+                              <label for="item${itemIndex}">Item</label>
+                              <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" required>
+                                <input type="hidden" id="product_id${itemIndex}" name="product_id" value="">
+                            </div>
+                            <div class="col-md-2">
+                              <label for="sale_qty${itemIndex}">Quantity</label>
+                              <input onkeyup="add_qty('${itemIndex}');" type="number" class="form-control item-quantity" name="sale_qty" id="sale_qty${itemIndex}" placeholder="Quantity" required>
+                            </div>
+                            <div class="col-md-2">
+                              <label for="closeStock${itemIndex}">closeStock</label>
+                              <input type="number" class="form-control item-quantity" name="closeStock" id="closeStock${itemIndex}" required readonly>
+                            </div>
+                            <div class="col-md-2">
+                              <label for="price${itemIndex}">Price</label>
+                              <input type="number" class="form-control item-price" name="price" id="price${itemIndex}" placeholder="Price" required readonly>
+                            </div>
+                            <div class="col-md-2">
+                              <label for="discount${itemIndex}">Discount</label>
+                              <div class="input-group">
+                                <input type="text" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0">
+                                <input onkeyup="add_discount('${itemIndex}');" type="number" class="form-control item-discount" name="discount" value="0" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
 
-                // Create a new item details form section
-                const newItem = `<div class="row remove_tr${itemIndex} mb-3">
-                                    <div class="col-md-2">
-                                      <label for="item${itemIndex}">Item</label>
-                                      <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" required>
-                                        <input type="hidden" id="product_id${itemIndex}" name="product_id" value="">
-                                    </div>
-                                    <div class="col-md-2">
-                                      <label for="sale_qty${itemIndex}">Quantity</label>
-                                      <input onkeyup="add_qty('${itemIndex}');" type="number" class="form-control item-quantity" name="sale_qty" id="sale_qty${itemIndex}" placeholder="Quantity" required>
-                                    </div>
-                                    <div class="col-md-2">
-                                      <label for="closeStock${itemIndex}">closeStock</label>
-                                      <input type="number" class="form-control item-quantity" name="closeStock" id="closeStock${itemIndex}" required readonly>
-                                    </div>
-                                    <div class="col-md-2">
-                                      <label for="price${itemIndex}">Price</label>
-                                      <input type="number" class="form-control item-price" name="price" id="price${itemIndex}" placeholder="Price" required readonly>
-                                    </div>
-                                    <div class="col-md-2">
-                                      <label for="discount${itemIndex}">Discount</label>
-                                      <div class="input-group">
-                                        <input type="text" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0">
-                                        <input onkeyup="add_discount('${itemIndex}');" type="number" class="form-control item-discount" name="discount" value="0" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
+                                <span class="input-group-text" id="discount-addon"><input onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>
+                                <input type="hidden" value="" id="type_discount${itemIndex}" name="type_discount">
+                              </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="subTotal${itemIndex}">Subtotal</label>
+                                <div class="input-group">
+                                  <input type="number" class="form-control item-subtotal" name="subtotal" id="subtotal${itemIndex}" placeholder="Subtotal" readonly>
+                                  <span class="input-group-text" id="discount-addon" style="border-color:red;"><i class="fa fa-trash-o" style="font-size:15px" onclick="remove_row('${itemIndex}');" id="remove_tr${itemIndex}"></i></span>
+                                </div>
+                            </div>
+                        </div>`;
 
-                                        <span class="input-group-text" id="discount-addon"><input onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>
-                                        <input type="hidden" value="" id="type_discount${itemIndex}" name="type_discount">
-                                      </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label for="subTotal${itemIndex}">Subtotal</label>
-                                        <div class="input-group">
-                                          <input type="number" class="form-control item-subtotal" name="subtotal" id="subtotal${itemIndex}" placeholder="Subtotal" readonly>
-                                          <span class="input-group-text" id="discount-addon" style="border-color:red;"><i class="fa fa-trash-o" style="font-size:15px" onclick="remove_row('${itemIndex}');" id="remove_tr${itemIndex}"></i></span>
-                                        </div>
-                                    </div>
-                                </div>`;
+            // Append the new item details section to the form
+            $(".item-details").append(newItem);
 
-                    // Append the new item details section to the form
-                    $(".item-details").append(newItem);
+    });
 
-            });
-        });
-
-        function remove_row(id){
-            $('.remove_tr'+id).remove();
-        }
+    function remove_row(id){
+        $('.remove_tr'+id).remove();
+    }
 
 </script>
 
@@ -238,7 +237,7 @@
      function get_product(indexID) {
 
         var code = $('#product'+indexID).val()
-        //console.log(code,'===============code')
+        console.log(code,'===============code')
         $.ajax({
           url: '/product/search-product/',
           type: 'Get',
