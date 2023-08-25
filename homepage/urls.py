@@ -11,5 +11,6 @@ urlpatterns = [
     path('export-csv/<str:param>/', views.export_data_to_csv, name='export_data_to_csv'),
     path('get-user/', views.get_user, name='get_user'),
     path('generate-pdf/<int:id>/', views.generate_pdf, name='generate_pdf'),
+    path('send_email/<int:id>/', views.send_email, name='send_email'),
 
 ]

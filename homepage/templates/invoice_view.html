@@ -135,6 +135,11 @@
         var pageUrl = '/generate-pdf/'+{{bill_id}}+'/';
         window.open(pageUrl, "_blank");
     })
+
+    $('#Mail').click(function(){
+        var pageUrl = '/send_email/'+{{bill_id}}+'/';
+        window.open(pageUrl, "_blank");
+    })
 </script>
 
 </body>
