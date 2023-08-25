@@ -38,6 +38,5 @@ tzlocal==5.0.1
 uritools==4.0.1
 urllib3==2.0.4
 webencodings==0.5.1
-xhtml2pdf==0.2.11
 XlsxWriter==3.1.2
 zipp==3.15.0
