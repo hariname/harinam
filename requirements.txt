@@ -4,10 +4,8 @@ backports.zoneinfo==0.2.1
 Brotli==1.0.9
 certifi==2023.7.22
 cffi==1.15.1
-colorama==0.4.6
 cryptography==41.0.3
 cssselect2==0.7.0
-Django==3.2.20
 django-wkhtmltopdf==3.4.0
 fonttools==4.38.0
 html5lib==1.1
