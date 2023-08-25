@@ -1,6 +1,5 @@
 import csv
 from datetime import datetime
-from io import BytesIO, StringIO
 
 from django.core.mail import EmailMessage
 from django.http import HttpResponse, JsonResponse
@@ -10,7 +9,7 @@ from django.template.loader import get_template
 from party.models import Party
 from product.models import Product, TransactionHistory, TransactionDetails
 from xhtml2pdf import pisa
-
+from io import BytesIO
 
 def convert_date(date_string, output_format='%Y-%m-%d'):
     date_object = datetime.strptime(date_string, '%Y-%m-%d')
