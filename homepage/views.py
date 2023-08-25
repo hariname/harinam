@@ -1,6 +1,6 @@
 import csv
 from datetime import datetime
-from io import BytesIO
+from io import BytesIO, StringIO
 
 from django.core.mail import EmailMessage
 from django.http import HttpResponse, JsonResponse
