@@ -378,14 +378,14 @@ def send_email(request, id):
     party_email = invoice_detail.party.email
     party_name = invoice_detail.party.customer_name
     email_subject = 'Your Bill Generated'
-
+    from_email = 'info@sanjay.solutions.com'
     # Generate the PDF using the PDF view
     pdf_response = generate_pdf(request, id)
     if pdf_response:
         pdf_content = pdf_response.content
 
         # Create an EmailMessage instance
-        email = EmailMessage(email_subject, f"HELLO, {party_name}", str(party_email), [party_email])
+        email = EmailMessage(email_subject, from_email, f"HELLO, {party_name}", str(party_email), [party_email])
         email.attach("your_pdf_filename.pdf", pdf_content, 'application/pdf')  # Attach the PDF
 
         try:

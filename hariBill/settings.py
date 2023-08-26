@@ -144,4 +144,4 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'info@sanjay.solutions.com'
 EMAIL_HOST_PASSWORD = 'Radharani@123'
-
+DEFAULT_FROM_EMAIL = 'info@sanjay.solutions.com'
