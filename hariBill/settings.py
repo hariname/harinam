@@ -153,6 +153,6 @@ EMAIL_HOST = 'smtpout.secureserver.net'
 EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'info@sanjay.solutions.com'
+EMAIL_HOST_USER = 'info@sanjay.solutions'
 EMAIL_HOST_PASSWORD = 'Radharani@123'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

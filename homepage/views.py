@@ -378,7 +378,7 @@ def send_email(request, id):
     party_email = invoice_detail.party.email
     party_name = invoice_detail.party.customer_name
     email_subject = 'Your Bill Generated'
-    from_email = 'info@sanjay.solutions.com'
+    from_email = 'info@sanjay.solutions'
     # Generate the PDF using the PDF view
     pdf_response = generate_pdf(request, id)
     if pdf_response:
