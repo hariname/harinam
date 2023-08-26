@@ -385,7 +385,7 @@ def send_email(request, id):
         pdf_content = pdf_response.content
 
         # Create an EmailMessage instance
-        email = EmailMessage(email_subject, f"HELLO, {party_name}", [str(party_email)], [party_email])
+        email = EmailMessage(email_subject, f"HELLO, {party_name}", [party_email])
         email.attach("your_pdf_filename.pdf", pdf_content, 'application/pdf')  # Attach the PDF
 
         try:
