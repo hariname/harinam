@@ -376,8 +376,8 @@ def send_email(request, id):
     invoice_detail = TransactionHistory.objects.get(id=id)
     party = invoice_detail.party
     recipient_list = [invoice_detail.party.email]
-    party_name = invoice_detail.party.customer_name
-    email_subject = 'Your Bill Generated'
+    message = f"HELLO, {invoice_detail.party.customer_name}"
+    subject = 'Your Bill Generated'
     from_email = 'info@sanjay.solutions'
     # Generate the PDF using the PDF view
     pdf_response = generate_pdf(request, id)
@@ -385,7 +385,7 @@ def send_email(request, id):
         pdf_content = pdf_response.content
 
         # Create an EmailMessage instance
-        email = EmailMessage(email_subject,from_email, [recipient_list])
+        email = EmailMessage(subject, message, from_email, recipient_list)
         email.attach("your_pdf_filename.pdf", pdf_content, 'application/pdf')  # Attach the PDF
 
         try:
