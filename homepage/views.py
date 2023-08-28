@@ -373,17 +373,17 @@ def generate_pdf(request, id):
     return HttpResponse("Error generating PDF")
 
 
-# def send_pd_whatsapp(pary_contact, subject, recipient_list):
-#     subject = subject + ' please check your email '+ recipient_list
-#     try:
-#         c_time = datetime.now().strftime("%H")
-#         pywhatkit.sendwhatmsg_instantly(f'+91{pary_contact}', subject, c_time)
-#     except:
-#         pass
+def send_pd_whatsapp(pary_contact, subject, recipient_list):
+    subject = subject + ' please check your email '+ recipient_list
+    try:
+        c_time = datetime.now().strftime("%H")
+        pywhatkit.sendwhatmsg_instantly(f'+91{pary_contact}', subject, c_time)
+    except:
+        pass
 
     # # Same as above but Closes the Tab in 2 Seconds after Sending the Message
     # pywhatkit.sendwhatmsg("+910123456789", "Hi", 13, 30, 15, True, 2)
-    #
+    #g
     # # Send an Image to a Group with the Caption as Hello
     # pywhatkit.sendwhats_image("AB123CDEFGHijklmn", "Images/Hello.png", "Hello")
     #
@@ -435,7 +435,7 @@ def send_email(request, id):
         try:
             email.send()
             # send_pd_whatsapp(pary_contact, subject, recipient_list)
-            # send_whatsapp_message('hello geeta')
+            send_whatsapp_message('hello geeta')
             return HttpResponse("Email sent successfully")
         except Exception as e:
             return HttpResponse(f"An error occurred: {str(e)}")
