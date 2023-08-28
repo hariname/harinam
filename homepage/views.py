@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime
 from io import BytesIO
-
+import urllib3
 import pywhatkit
 from django.core.mail import EmailMessage
 from django.http import HttpResponse, JsonResponse
