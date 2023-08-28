@@ -1,8 +1,6 @@
 import csv
 from datetime import datetime
 from io import BytesIO
-import urllib3
-import pywhatkit
 from django.core.mail import EmailMessage
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
@@ -13,19 +11,6 @@ from product.models import Product, TransactionHistory, TransactionDetails
 from xhtml2pdf import pisa
 import os
 
-# Check if the 'DISPLAY' environment variable is set
-if 'DISPLAY' not in os.environ:
-    # If 'DISPLAY' is not set, configure a virtual display using Xvfb
-    from pyvirtualdisplay import Display
-    display = Display(visible=0, size=(800, 600))
-    display.start()
-
-# Now you can use pywhatkit normally
-kit.sendwhatmsg("+1234567890", "Hello from pywhatkit!", 22, 30)
-
-# Stop the virtual display if it was started
-if 'display' in locals():
-    display.stop()
 
 
 
