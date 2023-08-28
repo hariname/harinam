@@ -10,10 +10,7 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from party.models import Party
 from product.models import Product, TransactionHistory, TransactionDetails
-from pynput.keyboard import Controller
 from xhtml2pdf import pisa
-
-keyboard = Controller()
 
 
 def convert_date(date_string, output_format='%Y-%m-%d'):
