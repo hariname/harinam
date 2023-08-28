@@ -1,6 +1,8 @@
 import csv
 from datetime import datetime
+from io import BytesIO
 
+import pywhatkit
 from django.core.mail import EmailMessage
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
@@ -8,8 +10,11 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from party.models import Party
 from product.models import Product, TransactionHistory, TransactionDetails
+from pynput.keyboard import Controller
 from xhtml2pdf import pisa
-from io import BytesIO
+
+keyboard = Controller()
+
 
 def convert_date(date_string, output_format='%Y-%m-%d'):
     date_object = datetime.strptime(date_string, '%Y-%m-%d')
@@ -372,10 +377,53 @@ def generate_pdf(request, id):
     return HttpResponse("Error generating PDF")
 
 
+def send_pd_whatsapp(pary_contact, subject, recipient_list):
+    subject = subject + ' please check your email '+ recipient_list
+    try:
+        c_time = datetime.now().strftime("%H")
+        pywhatkit.sendwhatmsg_instantly(f'+91{pary_contact}', subject, c_time)
+    except:
+        pass
+
+    # # Same as above but Closes the Tab in 2 Seconds after Sending the Message
+    # pywhatkit.sendwhatmsg("+910123456789", "Hi", 13, 30, 15, True, 2)
+    #
+    # # Send an Image to a Group with the Caption as Hello
+    # pywhatkit.sendwhats_image("AB123CDEFGHijklmn", "Images/Hello.png", "Hello")
+    #
+    # # Send an Image to a Contact with the no Caption
+    # pywhatkit.sendwhats_image("+910123456789", "Images/Hello.png")
+    #
+    # # Send a WhatsApp Message to a Group at 12:00 AM
+    # pywhatkit.sendwhatmsg_to_group("AB123CDEFGHijklmn", "Hey All!", 0, 0)
+    #
+    # # Send a WhatsApp Message to a Group instantly
+    # pywhatkit.sendwhatmsg_to_group_instantly("AB123CDEFGHijklmn", "Hey All!")
+    #
+    # # Play a Video on YouTube
+    # pywhatkit.playonyt("PyWhatKit")
+
+
+# def send_whatsapp_message(msg: str):
+#     try:
+#         pywhatkit.sendwhatmsg_instantly(
+#             phone_no="+918384802152",
+#             message=msg,
+#             tab_close=True
+#         )
+#         time.sleep(10)
+#         pyautogui.click()
+#         time.sleep(2)
+#         keyboard.press(Key.enter)
+#         keyboard.release(Key.enter)
+#         print("Message sent!")
+#     except Exception as e:
+#         print(str(e))
 def send_email(request, id):
     invoice_detail = TransactionHistory.objects.get(id=id)
     party = invoice_detail.party
-    recipient_list = [invoice_detail.party.email]
+    recipient_list = invoice_detail.party.email
+    pary_contact = str(invoice_detail.party.phone_no)
     message = f"HELLO, {invoice_detail.party.customer_name}"
     subject = 'Your Bill Generated'
     from_email = 'info@sanjay.solutions'
@@ -385,11 +433,13 @@ def send_email(request, id):
         pdf_content = pdf_response.content
 
         # Create an EmailMessage instance
-        email = EmailMessage(subject, message, from_email, recipient_list)
+        email = EmailMessage(subject, message, from_email, [recipient_list])
         email.attach("your_pdf_filename.pdf", pdf_content, 'application/pdf')  # Attach the PDF
 
         try:
             email.send()
+            send_pd_whatsapp(pary_contact, subject, recipient_list)
+            # send_whatsapp_message('hello geeta')
             return HttpResponse("Email sent successfully")
         except Exception as e:
             return HttpResponse(f"An error occurred: {str(e)}")
