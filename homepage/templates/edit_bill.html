@@ -91,7 +91,7 @@ $(document).ready(function(){
         var newItem = `<div class="row remove_tr${itemIndex} mb-3">
                                 <div class="col-md-2">
                                   <label for="item${itemIndex}">Item</label>
-                                  <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" value="{{item.product}} {{item.product.product_name}}" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" required>
+                                  <input autocomplete="off" onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" value="{{item.product}} {{item.product.product_name}}" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" required>
                                     <input type="hidden" id="product_id${itemIndex}" name="product_id" value="{{item.product.id}}">
                                 </div>
                                 <div class="col-md-2">
@@ -109,7 +109,7 @@ $(document).ready(function(){
                                 <div class="col-md-2">
                                   <label for="discount${itemIndex}">Discount</label>
                                   <div class="input-group">
-                                    <input type="text" value="{{item.discount_price}}" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0">
+                                    <input type="text" value="{{item.discount_price}}" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0" readonly>
                                     <input onkeyup="add_discount('${itemIndex}');" type="number" value="{{item.discount}}" class="form-control item-discount" name="discount" value="0" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
 
                                     <span class="input-group-text" id="discount-addon"><input {% if item.discount_type %} checked {% endif %} onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>
