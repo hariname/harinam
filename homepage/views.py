@@ -409,3 +409,21 @@ def send_email(request, id):
             return HttpResponse(f"An error occurred: {str(e)}")
     else:
         return HttpResponse("Error generating PDF")
+
+def credit_party(request):
+    obj = TransactionHistory.objects.filter(cash_credit='Credit')
+    page_status = 'Credit'
+    context = {
+        'credit_obj': obj,
+        'page_status': page_status,
+    }
+    return render(request,'credit_party.html', context)
+
+def cash_party(request):
+    obj = TransactionHistory.objects.filter(cash_credit='Cash')
+    page_status = 'Cash'
+    context = {
+        'credit_obj': obj,
+        'page_status': page_status,
+    }
+    return render(request,'credit_party.html', context)

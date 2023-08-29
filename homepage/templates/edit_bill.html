@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block container %}
 <div class="container">
-    <h1 class="text-center cursiv-title">Billing Form</h1>
+    <h1 class="text-center cursiv-title">Update Bill</h1>
     <form enctype="multipart/form-data" id="billingForm" method="post">
         {% csrf_token %}
         <!-- Customer Details -->
@@ -50,18 +50,15 @@
             </div>
 
 
-<!--            #&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;cash credit-->
             <div class="form-check form-check-inline">
-                <input checked class="form-check-input" id="cash" name="cash_credit" type="radio">
+                <input {% if cash_credit == 'Cash' %} checked  {% endif %} class="form-check-input" id="cash" name="cash_credit" type="radio">
                 <label class="form-check-label" for="cash">Cash</label>
             </div>
             <input type="hidden" name="cash_type" value="" id="cash_type">
             <div class="form-check form-check-inline">
-                <input class="form-check-input" id="credit" name="cash_credit" type="radio">
+                <input {% if cash_credit == 'Credit' %} checked  {% endif %} class="form-check-input" id="credit" name="cash_credit" type="radio">
                 <label class="form-check-label" for="credit">Credit</label>
             </div>
-
-
         </div>
 
         <div class="col-lg-4">

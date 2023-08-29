@@ -4,6 +4,8 @@ from . import views
 
 urlpatterns = [
     path('transaction-HISTORY/', views.transactionHISTORY, name='transactionHISTORY'),
+    path('credit-party/', views.credit_party, name='credit_party'),
+    path('cash-party/', views.cash_party, name='cash_party'),
     path('', views.generateBILL, name='generateBILL'),
     path('edit-bill/<int:bill_id>/', views.edit_bill, name='edit_bill'),
     path('view-invoice/', views.view_invoice, name='view_invoice'),
