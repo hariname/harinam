@@ -42,8 +42,14 @@
 
             <td>{{credit_obj.cash_credit}}</td>
             <td>
-                <input type="radio" name="payment_received" />
-                {% if credit_obj.cash_credit == 'Cash' %}<label>No</label>{% else %}<label>Yes</label>{% endif %}
+                {% if credit_obj.cash_credit == 'Cash' %}
+                <input id="cash" type="radio" name="payment_received" value="{{credit_obj.id}}"/>
+                <label>No</label>
+
+                {% else %}
+                <input id="credit" type="radio" name="payment_received" value="{{credit_obj.id}}"/>
+                <label>Yes</label>
+                {% endif %}
             </td>
 
 <!--            <td><a href="/product/edit-product/{{product.id}}/">Edit</a> &nbsp;&nbsp;<a href="/product/delete-product/{{product.id}}/">Delete</a></td>-->
@@ -64,6 +70,18 @@
 
 <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+<script>
+    $('#cash').click(function(){
+        let cash = $(this).val();
+        window.location.href = '/payment-type/Cash/'+cash+'/'
+    });
+
+    $('#credit').click(function(){
+        let credit = $(this).val();
+        window.location.href = '/payment-type/Credit/'+credit+'/'
+    });
+</script>
 
 <script>
     $(document).ready(function () {

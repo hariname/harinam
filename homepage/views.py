@@ -417,4 +417,13 @@ def cash_credit_party(request, status):
         'credit_obj': obj,
         'page_status': page_status,
     }
-    return render(request,'credit_party.html', context)
+    return render(request,'cash_credit.html', context)
+
+def party_payment_status(request, status, trans_id):
+    if status == 'Credit':
+        TransactionHistory.objects.filter(id=trans_id).update(cash_credit='Cash')
+        return redirect(f'/credit-party/{status}/')
+    else:
+        TransactionHistory.objects.filter(id=trans_id).update(cash_credit='Credit')
+        return redirect(f'/cash-party/{status}/')
+
