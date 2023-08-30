@@ -82,6 +82,7 @@
 {% endblock %}
 <!-- Include Bootstrap JS and jQuery -->
 {% block js %}
+
 <script>
     $(document).ready(function(){
         $('#cash_type').val('Cash');
@@ -95,6 +96,52 @@
             $('#cash_type').val('Credit');
        })
     })
+</script>
+
+<script>
+    let itemIndex = 1;
+    $(document).ready(function(){
+        // Create a new item details form section
+        const newItem = `<div class="row remove_tr${itemIndex} mb-3">
+                            <div class="col-md-2">
+                              <label for="item${itemIndex}">Item</label>
+                              <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" autocomplete="off" required>
+                                <input type="hidden" id="product_id${itemIndex}" name="product_id" value="">
+                            </div>
+                            <div class="col-md-2">
+                              <label for="sale_qty${itemIndex}">Quantity</label>
+                              <input onkeyup="add_qty('${itemIndex}');" type="number" class="form-control item-quantity" name="sale_qty" id="sale_qty${itemIndex}" placeholder="Quantity" required>
+                            </div>
+                            <div class="col-md-2">
+                              <label for="closeStock${itemIndex}">closeStock</label>
+                              <input type="number" class="form-control item-quantity" name="closeStock" id="closeStock${itemIndex}" required readonly>
+                            </div>
+                            <div class="col-md-2">
+                              <label for="price${itemIndex}">Price</label>
+                              <input type="number" class="form-control item-price" name="price" id="price${itemIndex}" placeholder="Price" required readonly>
+                            </div>
+                            <div class="col-md-2">
+                              <label for="discount${itemIndex}">Discount</label> &nbsp; &nbsp; <label for="Percent${itemIndex}">Percent</label>
+                              <div class="input-group">
+                                <input type="text" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0" readonly>
+                                <input onkeyup="add_discount('${itemIndex}');" type="number" class="form-control item-discount" name="discount" value="0" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
+
+                                <span class="input-group-text" id="discount-addon"><input onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>
+                                <input type="hidden" value="" id="type_discount${itemIndex}" name="type_discount">
+                              </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="subTotal${itemIndex}">Subtotal</label>
+                                <div class="input-group">
+                                  <input type="number" class="form-control item-subtotal" name="subtotal" id="subtotal${itemIndex}" placeholder="Subtotal" readonly>
+                                  <span class="input-group-text" id="discount-addon" style="border-color:red;"><i class="fa fa-trash-o" style="font-size:15px" onclick="remove_row('${itemIndex}');" id="remove_tr${itemIndex}"></i></span>
+                                </div>
+                            </div>
+                        </div>`;
+
+            // Append the new item details section to the form
+            $(".item-details").append(newItem);
+    });
 </script>
 <script>
     function get_user(){
@@ -123,63 +170,60 @@
         });
     }
 
-</script>
+    $(document).ready(function () {
 
-<script>
-        $(document).ready(function () {
-            let itemIndex = 0;
 
-            // Handle click on "Add" button
-            $("#addBtn").on("click", function () {
-                itemIndex++;
+        // Handle click on "Add" button
+        $("#addBtn").on("click", function () {
+            itemIndex++;
 
             // Create a new item details form section
             const newItem = `<div class="row remove_tr${itemIndex} mb-3">
-                                <div class="col-md-2">
-                                  <label for="item${itemIndex}">Item</label>
-                                  <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" autocomplete="off" required>
-                                    <input type="hidden" id="product_id${itemIndex}" name="product_id" value="">
-                                </div>
-                                <div class="col-md-2">
-                                  <label for="sale_qty${itemIndex}">Quantity</label>
-                                  <input onkeyup="add_qty('${itemIndex}');" type="number" class="form-control item-quantity" name="sale_qty" id="sale_qty${itemIndex}" placeholder="Quantity" required>
-                                </div>
-                                <div class="col-md-2">
-                                  <label for="closeStock${itemIndex}">closeStock</label>
-                                  <input type="number" class="form-control item-quantity" name="closeStock" id="closeStock${itemIndex}" required readonly>
-                                </div>
-                                <div class="col-md-2">
-                                  <label for="price${itemIndex}">Price</label>
-                                  <input type="number" class="form-control item-price" name="price" id="price${itemIndex}" placeholder="Price" required readonly>
-                                </div>
-                                <div class="col-md-2">
-                                  <label for="discount${itemIndex}">Discount</label>
-                                  <div class="input-group">
-                                    <input type="text" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0" readonly>
-                                    <input onkeyup="add_discount('${itemIndex}');" type="number" class="form-control item-discount" name="discount" value="0" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
+                            <div class="col-md-2">
+                              <label for="item${itemIndex}">Item</label>
+                              <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" autocomplete="off" required>
+                                <input type="hidden" id="product_id${itemIndex}" name="product_id" value="">
+                            </div>
+                            <div class="col-md-2">
+                              <label for="sale_qty${itemIndex}">Quantity</label>
+                              <input onkeyup="add_qty('${itemIndex}');" type="number" class="form-control item-quantity" name="sale_qty" id="sale_qty${itemIndex}" placeholder="Quantity" required>
+                            </div>
+                            <div class="col-md-2">
+                              <label for="closeStock${itemIndex}">closeStock</label>
+                              <input type="number" class="form-control item-quantity" name="closeStock" id="closeStock${itemIndex}" required readonly>
+                            </div>
+                            <div class="col-md-2">
+                              <label for="price${itemIndex}">Price</label>
+                              <input type="number" class="form-control item-price" name="price" id="price${itemIndex}" placeholder="Price" required readonly>
+                            </div>
+                            <div class="col-md-2">
+                              <label for="discount${itemIndex}">Discount</label> &nbsp; &nbsp; <label for="Percent${itemIndex}">Percent</label>
+                              <div class="input-group">
+                                <input type="text" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0" readonly>
+                                <input onkeyup="add_discount('${itemIndex}');" type="number" class="form-control item-discount" name="discount" value="0" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
 
-                                    <span class="input-group-text" id="discount-addon"><input onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>
-                                    <input type="hidden" value="" id="type_discount${itemIndex}" name="type_discount">
-                                  </div>
+                                <span class="input-group-text" id="discount-addon"><input onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>
+                                <input type="hidden" value="" id="type_discount${itemIndex}" name="type_discount">
+                              </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="subTotal${itemIndex}">Subtotal</label>
+                                <div class="input-group">
+                                  <input type="number" class="form-control item-subtotal" name="subtotal" id="subtotal${itemIndex}" placeholder="Subtotal" readonly>
+                                  <span class="input-group-text" id="discount-addon" style="border-color:red;"><i class="fa fa-trash-o" style="font-size:15px" onclick="remove_row('${itemIndex}');" id="remove_tr${itemIndex}"></i></span>
                                 </div>
-                                <div class="col-md-2">
-                                    <label for="subTotal${itemIndex}">Subtotal</label>
-                                    <div class="input-group">
-                                      <input type="number" class="form-control item-subtotal" name="subtotal" id="subtotal${itemIndex}" placeholder="Subtotal" readonly>
-                                      <span class="input-group-text" id="discount-addon" style="border-color:red;"><i class="fa fa-trash-o" style="font-size:15px" onclick="remove_row('${itemIndex}');" id="remove_tr${itemIndex}"></i></span>
-                                    </div>
-                                </div>
-                            </div>`;
+                            </div>
+                        </div>`;
 
-                // Append the new item details section to the form
-                $(".item-details").append(newItem);
+            // Append the new item details section to the form
+            $(".item-details").append(newItem);
 
-            });
         });
+    });
 
-        function remove_row(id){
-            $('.remove_tr'+id).remove();
-        }
+    function remove_row(id){
+        $('.remove_tr'+id).remove();
+    }
 
 </script>
 
@@ -300,9 +344,6 @@
                         $('#subtotal'+indexID).val(sub_total);
                         $('#type_discount'+indexID).val(discount_type)
                         $('#discount'+indexID).prop('readonly', true)
-
-
-
                     }
                 }else{
                     $('#discount_price'+indexID).val(0);
@@ -327,6 +368,12 @@
 
 <script>
     function add_discount(indexID){
+        var dis_count = $('#discount'+indexID).val();
+        if(dis_count < 1){
+            $('#discount'+indexID).val('');
+            alert('please enter discount more than 1 percent or flat !')
+            return false;
+        }
       var pro_id = $('#product_id'+indexID).val();
 
       if (pro_id != '') {
