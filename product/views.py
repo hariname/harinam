@@ -26,14 +26,14 @@ def add_product(request):
         productImage = form_image.get('productImage')
 
         obj = Product.objects.create(product_name=productName,
-                                         code=productCode,
-                                         category_id=productCategory,
-                                         desc=productDescription,
-                                         purchase_price=purchasePrice,
-                                         sale_price=salePrice,
-                                         open_stock=OpenStock,
-                                         present_stock=OpenStock,
-                                         )
+                                     code=productCode,
+                                     category_id=productCategory,
+                                     desc=productDescription,
+                                     purchase_price=purchasePrice,
+                                     sale_price=salePrice,
+                                     open_stock=OpenStock,
+                                     present_stock=OpenStock,
+                                     )
 
         if obj:
             msg = 'Product Added Successful!'
@@ -376,3 +376,60 @@ def export_trans_hostory(request, fromD, toD, search):
     response['Content-Disposition'] = "attachment; filename=transaction_list.xlsx"
 
     return response
+
+
+def add_category(request):
+    if request.method == 'POST':
+        form = request.POST
+        name = form.get('categoryName')
+        desc = form.get('categoryDescription')
+        try:
+            obj = Category.objects.create(name=name, desc=desc)
+            if obj:
+                msg = 'Category added successfully.'
+        except:
+            msg = 'Category added failed!'
+        json_data = {
+            'msg': msg,
+        }
+        return JsonResponse(json_data)
+    else:
+        return render(request, 'add_category.html')
+
+
+def edit_category(request, id):
+    if request.method == 'POST':
+        form = request.POST
+        name = form.get('categoryName')
+        desc = form.get('categoryDescription')
+        try:
+            obj = Category.objects.filter(id=id).update(name=name, desc=desc)
+            if obj:
+                msg = 'Category updated successfully.'
+        except:
+            msg = 'Category updated failed!'
+        json_data = {
+            'msg': msg,
+        }
+        return JsonResponse(json_data)
+    else:
+        category = Category.objects.get(id=id)
+        context = {
+            'id': id,
+            'category': category,
+        }
+        return render(request, 'edit_category.html', context)
+def delete_category(request, id):
+    try:
+        Category.objects.get(id=id).delete()
+    except:
+        pass
+    return redirect('/product/category-list/')
+
+
+def category_list(request):
+    category = Category.objects.all()
+    context = {
+        'category': category,
+    }
+    return render(request, 'category_list.html', context)

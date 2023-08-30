@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'homepage',
     'product',
     'party',
+    'accounts',
 ]
 
 MIDDLEWARE = [
