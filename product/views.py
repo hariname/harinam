@@ -23,7 +23,6 @@ def add_product(request):
         purchasePrice = form.get('purchasePrice')
         salePrice = form.get('salePrice')
         OpenStock = form.get('OpenStock')
-        productImage = form_image.get('productImage')
 
         obj = Product.objects.create(product_name=productName,
                                      code=productCode,
@@ -41,12 +40,6 @@ def add_product(request):
             msg = 'Product Add failed.'
         json_data = {'msg': msg}
         return JsonResponse(json_data)
-
-        # if product:
-        #     if productImage:
-        #         product.image = productImage
-        #         product.save()
-        #     return redirect('/product/productLIST/')
     else:
         category = Category.objects.all()
         context = {

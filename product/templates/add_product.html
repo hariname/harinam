@@ -7,7 +7,7 @@
             <div class="mb-3 form-group col-lg-4">
                 <label for="productName">Product Name:</label>
                 <input class="form-control" id="productName" name="productName" placeholder="Enter product name"
-                       type="text" style="text-transform: uppercase;">
+                       type="text" style="text-transform: uppercase;" required>
             </div>
             <div class="mb-3 form-group col-lg-4">
                 <label for="productCode">Product Code:</label>
@@ -17,7 +17,7 @@
 
             <div class="mb-3 form-group col-lg-4">
                 <label for="productCategory">Product Category:</label>
-                <select class="form-control" id="productCategory" name="productCategory">
+                <select class="form-control" id="productCategory" name="productCategory" required>
                     {% for category in category %}
                     <option value="{{category.id}}">{{category.name}}</option>
                     {% endfor %}
@@ -36,26 +36,19 @@
             <div class="mb-3 form-group col-lg-4">
                 <label for="purchasePrice">Purchase Price:</label>
                 <input class="form-control" id="purchasePrice" name="purchasePrice" placeholder="Enter Purchase price"
-                       type="number">
+                       type="number" required>
             </div>
             <div class="mb-3 form-group col-lg-4">
                 <label for="salePrice">Sale Price:</label>
                 <input class="form-control" id="salePrice" name="salePrice" placeholder="Enter sale price"
-                       type="number">
+                       type="number" required>
             </div>
             <div class="mb-3 form-group col-lg-4">
                 <label for="OpenStock">Open Stock:</label>
                 <input class="form-control" id="OpenStock" name="OpenStock" placeholder="Enter open stock"
-                       type="number">
+                       type="number" required>
             </div>
         </div>
-
-<!--        <div class="row">-->
-<!--            <div class="mb-3 form-group col-lg-6">-->
-<!--                <label for="productImage">Product Image:</label>-->
-<!--                <input class="form-control" id="productImage" name="productImage" type="file">-->
-<!--            </div>-->
-<!--        </div>-->
 
         <div class="text-center">
             <button class="btn btn-primary w-25" type="submit">Submit</button>
