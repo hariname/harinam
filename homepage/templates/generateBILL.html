@@ -146,6 +146,8 @@ function get_product(indexID) {
             $('#product_id' + indexID).val(ui.item.id);
             $('#closeStock' + indexID).val(ui.item.closeStock);
             $('#price' + indexID).val(ui.item.price);
+
+            add_line_items()
         }
     });
 }
@@ -187,46 +189,48 @@ function get_product(indexID) {
 <script>
     let itemIndex = 1;
     $(document).ready(function(){
-        // Create a new item details form section
-        const newItem = `<div class="row remove_tr${itemIndex} mb-3">
-                            <div class="col-md-2">
-                              <label for="item${itemIndex}">Item</label>
-                              <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" autocomplete="off" required>
-                                <input type="hidden" id="product_id${itemIndex}" name="product_id" value="">
-                            </div>
-                            <div class="col-md-2">
-                              <label for="sale_qty${itemIndex}">Quantity</label>
-                              <input onkeyup="add_qty('${itemIndex}');" type="number" class="form-control item-quantity" name="sale_qty" id="sale_qty${itemIndex}" placeholder="Quantity" required>
-                            </div>
-                            <div class="col-md-2">
-                              <label for="closeStock${itemIndex}">closeStock</label>
-                              <input type="number" class="form-control item-quantity" name="closeStock" id="closeStock${itemIndex}" required readonly>
-                            </div>
-                            <div class="col-md-2">
-                              <label for="price${itemIndex}">Price</label>
-                              <input type="number" class="form-control item-price" name="price" id="price${itemIndex}" placeholder="Price" required readonly>
-                            </div>
-                            <div class="col-md-2">
-                              <label for="discount${itemIndex}">Discount</label> &nbsp; &nbsp; <label for="Percent${itemIndex}">Percent</label>
-                              <div class="input-group">
-                                <input type="text" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0" readonly>
-                                <input onkeyup="add_discount('${itemIndex}');" type="number" class="form-control item-discount" name="discount" value="0" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">
 
-                                <span class="input-group-text" id="discount-addon"><input onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>
-                                <input type="hidden" value="" id="type_discount${itemIndex}" name="type_discount">
-                              </div>
-                            </div>
-                            <div class="col-md-2">
-                                <label for="subTotal${itemIndex}">Subtotal</label>
-                                <div class="input-group">
-                                  <input type="number" class="form-control item-subtotal" name="subtotal" id="subtotal${itemIndex}" placeholder="Subtotal" readonly>
-                                  <span class="input-group-text" id="discount-addon" style="border-color:red;"><i class="fa fa-trash-o" style="font-size:15px" onclick="remove_row('${itemIndex}');" id="remove_tr${itemIndex}"></i></span>
-                                </div>
-                            </div>
-                        </div>`;
+        add_line_items()
+<!--        // Create a new item details form section-->
+<!--        const newItem = `<div class="row remove_tr${itemIndex} mb-3">-->
+<!--                            <div class="col-md-2">-->
+<!--                              <label for="item${itemIndex}">Item</label>-->
+<!--                              <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" autocomplete="off" required>-->
+<!--                                <input type="hidden" id="product_id${itemIndex}" name="product_id" value="">-->
+<!--                            </div>-->
+<!--                            <div class="col-md-2">-->
+<!--                              <label for="sale_qty${itemIndex}">Quantity</label>-->
+<!--                              <input onkeyup="add_qty('${itemIndex}');" type="number" class="form-control item-quantity" name="sale_qty" id="sale_qty${itemIndex}" placeholder="Quantity" required>-->
+<!--                            </div>-->
+<!--                            <div class="col-md-2">-->
+<!--                              <label for="closeStock${itemIndex}">closeStock</label>-->
+<!--                              <input type="number" class="form-control item-quantity" name="closeStock" id="closeStock${itemIndex}" required readonly>-->
+<!--                            </div>-->
+<!--                            <div class="col-md-2">-->
+<!--                              <label for="price${itemIndex}">Price</label>-->
+<!--                              <input type="number" class="form-control item-price" name="price" id="price${itemIndex}" placeholder="Price" required readonly>-->
+<!--                            </div>-->
+<!--                            <div class="col-md-2">-->
+<!--                              <label for="discount${itemIndex}">Discount</label> &nbsp; &nbsp; <label for="Percent${itemIndex}">Percent</label>-->
+<!--                              <div class="input-group">-->
+<!--                                <input type="text" class="form-control item-discount" name="discount_price" id="discount_price${itemIndex}" value="0" readonly>-->
+<!--                                <input onkeyup="add_discount('${itemIndex}');" type="number" class="form-control item-discount" name="discount" value="0" id="discount${itemIndex}" placeholder="Discount" aria-label="Discount" aria-describedby="discount-addon">-->
 
-            // Append the new item details section to the form
-            $(".item-details").append(newItem);
+<!--                                <span class="input-group-text" id="discount-addon"><input onchange="apply_discount('${itemIndex}');" type="checkbox" id="discount_checkbox${itemIndex}"></span>-->
+<!--                                <input type="hidden" value="" id="type_discount${itemIndex}" name="type_discount">-->
+<!--                              </div>-->
+<!--                            </div>-->
+<!--                            <div class="col-md-2">-->
+<!--                                <label for="subTotal${itemIndex}">Subtotal</label>-->
+<!--                                <div class="input-group">-->
+<!--                                  <input type="number" class="form-control item-subtotal" name="subtotal" id="subtotal${itemIndex}" placeholder="Subtotal" readonly>-->
+<!--                                  <span class="input-group-text" id="discount-addon" style="border-color:red;"><i class="fa fa-trash-o" style="font-size:15px" onclick="remove_row('${itemIndex}');" id="remove_tr${itemIndex}"></i></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>`;-->
+
+<!--            // Append the new item details section to the form-->
+<!--            $(".item-details").append(newItem);-->
     });
 
 
@@ -258,11 +262,8 @@ function get_product(indexID) {
         });
     }
 
-    $(document).ready(function () {
 
-
-        // Handle click on "Add" button
-        $("#addBtn").on("click", function () {
+        function add_line_items() {
             itemIndex++;
 
             // Create a new item details form section
@@ -305,50 +306,15 @@ function get_product(indexID) {
 
             // Append the new item details section to the form
             $(".item-details").append(newItem);
-
-        });
-    });
+        }
 
     function remove_row(id){
         $('.remove_tr'+id).remove();
     }
 
-
-
-</script>
-
-
-<script>
-<!--     function get_product(indexID) {-->
-
-<!--        var code = $('#product'+indexID).val()-->
-<!--        //console.log(code,'===============code')-->
-<!--        $.ajax({-->
-<!--          url: '/product/search-product/',-->
-<!--          type: 'Get',-->
-<!--          data: { 'code': code },-->
-<!--          success: function (result) {-->
-<!--            if (result.length > 0) {-->
-<!--              var pro_id = result.product['p_id']-->
-<!--              var pro_name = result.product['p_name']-->
-<!--              var pro_code = result.product['p_code']-->
-<!--              var qty = result.product['p_qty']-->
-<!--              var product_sale_price = result.product['p_sale_price']-->
-
-<!--              $('#product'+indexID).val(pro_code+' '+pro_name)-->
-<!--              $('#product_id'+indexID).val(pro_id)-->
-<!--              $('#closeStock'+indexID).val(qty)-->
-<!--              $('#price'+indexID).val(product_sale_price)-->
-
-<!--            }-->
-<!--            //console.log(result.product['p_name'],result.product['p_qty'],'==========================response')-->
-<!--          },-->
-<!--          error: function (xhr, errmsg, err) {-->
-<!--            // Handle the error-->
-<!--            console.log(xhr.status + ": " + xhr.responseText);-->
-<!--          }-->
-<!--        });-->
-<!--      }-->
+    $("#addBtn").on("click", function(){
+        add_line_items()
+    })
 
 
 
