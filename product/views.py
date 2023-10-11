@@ -62,11 +62,9 @@ def search_product(request):
             data_dict['p_qty'] = product.present_stock if product.present_stock else 0
             product_list.append(data_dict)
         json_data = {
-            'length': len(product_list),
+            'len': len(product_list),
             'product': product_list,
         }
-
-        print(json_data,'============json_data')
         return JsonResponse(json_data)
 
 
