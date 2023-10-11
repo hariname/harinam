@@ -1,11 +1,6 @@
 {% extends 'base.html' %}
 
 {% block css %}
-<!--    .ui-autocomplete {-->
-<!--        max-height: 150px;-->
-<!--        overflow-y: auto;-->
-<!--        /* Additional styles */-->
-<!--    }-->
 
 {% endblock css %}
 
@@ -120,6 +115,7 @@ function get_product(indexID) {
                 type: 'GET',
                 data: { 'code': request.term },
                 success: function (result) {
+                    console.log(result.product, '----------result')
                     if (Array.isArray(result.product) && result.length > 0) {
                         var suggestedProducts = result.product.map(function (product) {
                             return {
