@@ -82,6 +82,7 @@ def view_invoice(request, id=None):
         invoice_detail = TransactionHistory.objects.get(id=id)
         party = invoice_detail.party
         party_add = invoice_detail.party.address
+        party_contact = invoice_detail.party.phone_no
         cash_credit = invoice_detail.cash_credit
         invoice_no = invoice_detail.invoice_number
         invoice_date = invoice_detail.date
@@ -96,7 +97,7 @@ def view_invoice(request, id=None):
             data_dict['sale_qty'] = i.sale_qty
             data_dict['base_price'] = i.base_price
             data_dict['discount_type'] = i.discount_type
-            data_dict['discount'] = i.discount
+            data_dict['discount'] = i.discount_price
             data_dict['net_sale'] = i.net_sale
             data_dict['sale_rate'] = i.sale_rate
             data_dict['sale_amt'] = i.sale_amt
@@ -110,6 +111,7 @@ def view_invoice(request, id=None):
             'cash_credit': cash_credit,
             'party': party,
             'party_add': party_add,
+            'party_contact': party_contact,
             'invoice_no': invoice_no,
             'invoice_date': invoice_date,
             'data_list': data_list,
@@ -139,6 +141,7 @@ def edit_bill(request, bill_id):
         type_discount = form.getlist('type_discount')
         discount = form.getlist('discount')
         discount_price = form.getlist('discount_price')
+        print(discount_price,'--------------------------discount_price')
         subtotal = form.getlist('subtotal')
         cash_credit = form.get('cash_type')
 

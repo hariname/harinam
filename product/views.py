@@ -51,20 +51,20 @@ def add_product(request):
 def search_product(request):
     if request.method == 'GET':
         code = request.GET.get('code')
-        product = Product.objects.filter(Q(code__iexact=code) | Q(product_name__iexact=code))
-        # product_list = []
-        data_dict = {}
+        product = Product.objects.filter(Q(code__startswith=code) | Q(product_name__startswith=code))
+        product_list = []
+
         for product in product:
+            data_dict = {}
             data_dict['p_id'] = product.id
             data_dict['p_name'] = product.product_name
             data_dict['p_code'] = product.code
             data_dict['p_sale_price'] = product.sale_price
             data_dict['p_qty'] = product.present_stock if product.present_stock else 0
-
-        length = len(data_dict)
+            product_list.append(data_dict)
         json_data = {
-            'length': length,
-            'product': data_dict,
+            'length': len(data_dict),
+            'product': product_list,
         }
         return JsonResponse(json_data)
 

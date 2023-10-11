@@ -1,10 +1,22 @@
 {% extends 'base.html' %}
+
+{% block css %}
+<!--    .ui-autocomplete {-->
+<!--        max-height: 150px;-->
+<!--        overflow-y: auto;-->
+<!--        /* Additional styles */-->
+<!--    }-->
+
+{% endblock css %}
+
 {% block container %}
 <div class="container">
     <h1 class="text-center cursiv-title">Billing Form</h1>
     <form enctype="multipart/form-data" id="billingForm" method="post">
         {% csrf_token %}
         <!-- Customer Details -->
+        <input type="text" id="autocomplete-input">
+
         <div class="row">
             <div class="mb-3 col-lg-6">
                 <label for="customerName">Customer Name</label>
@@ -36,35 +48,35 @@
 
         <!-- Discount Type -->
         <div class="row">
-        <div class="mb-3 col-lg-6">
-            <label for="discountType">Discount Type</label><br>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" id="flatDiscount" name="discountType" type="radio" value="flat">
-                <label class="form-check-label" for="flatDiscount">Flat Discount</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input checked class="form-check-input" id="percentageDiscount" name="discountType" type="radio"
-                       value="Percent">
-                <label class="form-check-label" for="percentageDiscount">Percentage Discount</label>
-            </div>
-<!--            #&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;cash credit-->
-            <div class="form-check form-check-inline">
-                <input checked class="form-check-input" id="cash" name="cash_credit" type="radio">
-                <label class="form-check-label" for="cash">Cash</label>
-            </div>
-            <input type="hidden" name="cash_type" value="" id="cash_type">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" id="credit" name="cash_credit" type="radio">
-                <label class="form-check-label" for="credit">Credit</label>
-            </div>
+            <div class="mb-3 col-lg-6">
+                <label for="discountType">Discount Type</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" id="flatDiscount" name="discountType" type="radio" value="flat">
+                    <label class="form-check-label" for="flatDiscount">Flat Discount</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input checked class="form-check-input" id="percentageDiscount" name="discountType" type="radio"
+                           value="Percent">
+                    <label class="form-check-label" for="percentageDiscount">Percentage Discount</label>
+                </div>
+                <!--            #&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;cash credit-->
+                <div class="form-check form-check-inline">
+                    <input checked class="form-check-input" id="cash" name="cash_credit" type="radio">
+                    <label class="form-check-label" for="cash">Cash</label>
+                </div>
+                <input id="cash_type" name="cash_type" type="hidden" value="">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" id="credit" name="cash_credit" type="radio">
+                    <label class="form-check-label" for="credit">Credit</label>
+                </div>
 
 
-        </div>
+            </div>
 
-        <div class="col-lg-4">
-            <label class="" for="bill_date">Bill Date</label>
-            <input class="form-control" id="bill_date" name="bill_date" type="text">
-        </div>
+            <div class="col-lg-4">
+                <label class="" for="bill_date">Bill Date</label>
+                <input class="form-control" id="bill_date" name="bill_date" type="text">
+            </div>
         </div>
 
         <div class="text-center mb-3">
@@ -72,6 +84,23 @@
             <button class="btn btn-primary" type="submit">Submit</button>
         </div>
 
+
+        <div id="all-percent" class="mb-2">
+            <div class="row">
+                <div class="col-md-6"></div>
+
+                <div class="col-md-6 float-end">
+                    <div class="row">
+                        <div class="col-md-4"></div>
+
+                        <div class="col-md-4">
+                            <label for="all_check">Apply to all</label>
+                            <input id="all_check" type="checkbox" onchange="all_check_item()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Item Details -->
         <div class="item-details">
 
@@ -84,6 +113,61 @@
 {% block js %}
 
 <script>
+
+function get_product(indexID) {
+    $('#product' + indexID).autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '/product/search-product/',
+                type: 'GET',
+                data: { 'code': request.term },
+                success: function (result) {
+                    if (Array.isArray(result.product) && result.length > 0) {
+                        var suggestedProducts = result.product.map(function (product) {
+                            return {
+                                label: product.p_code + ' ' + product.p_name,
+                                value: product.p_code + ' ' + product.p_name,
+                                id: product.p_id,
+                                closeStock: product.p_qty,
+                                price: product.p_sale_price
+                            };
+                        });
+                        response(suggestedProducts);
+                    }
+                },
+                error: function (xhr, errmsg, err) {
+                    // Handle the error
+                    console.log(xhr.status + ": " + xhr.responseText);
+                }
+            });
+        },
+        select: function (event, ui) {
+            // Set the selected product details in your input fields
+            $('#product_id' + indexID).val(ui.item.id);
+            $('#closeStock' + indexID).val(ui.item.closeStock);
+            $('#price' + indexID).val(ui.item.price);
+        }
+    });
+}
+
+    function all_check_item(){
+        var value = $('#all_check').prop('checked')
+
+        var discount_type = $("input[name='discountType']:checked").val();
+        if(value == true){
+
+            if(discount_type == 'Percent'){
+
+            }else{
+
+            }
+
+        }else{
+
+        }
+    }
+
+
     $(document).ready(function(){
         $('#cash_type').val('Cash');
        $('#cash').click(function(){
@@ -96,6 +180,8 @@
             $('#cash_type').val('Credit');
        })
     })
+
+
 </script>
 
 <script>
@@ -142,6 +228,8 @@
             // Append the new item details section to the form
             $(".item-details").append(newItem);
     });
+
+
 </script>
 <script>
     function get_user(){
@@ -225,40 +313,44 @@
         $('.remove_tr'+id).remove();
     }
 
+
+
 </script>
 
 
 <script>
-     function get_product(indexID) {
+<!--     function get_product(indexID) {-->
 
-        var code = $('#product'+indexID).val()
-        //console.log(code,'===============code')
-        $.ajax({
-          url: '/product/search-product/',
-          type: 'Get',
-          data: { 'code': code },
-          success: function (result) {
-            if (result.length > 0) {
-              var pro_id = result.product['p_id']
-              var pro_name = result.product['p_name']
-              var pro_code = result.product['p_code']
-              var qty = result.product['p_qty']
-              var product_sale_price = result.product['p_sale_price']
+<!--        var code = $('#product'+indexID).val()-->
+<!--        //console.log(code,'===============code')-->
+<!--        $.ajax({-->
+<!--          url: '/product/search-product/',-->
+<!--          type: 'Get',-->
+<!--          data: { 'code': code },-->
+<!--          success: function (result) {-->
+<!--            if (result.length > 0) {-->
+<!--              var pro_id = result.product['p_id']-->
+<!--              var pro_name = result.product['p_name']-->
+<!--              var pro_code = result.product['p_code']-->
+<!--              var qty = result.product['p_qty']-->
+<!--              var product_sale_price = result.product['p_sale_price']-->
 
-              $('#product'+indexID).val(pro_code+' '+pro_name)
-              $('#product_id'+indexID).val(pro_id)
-              $('#closeStock'+indexID).val(qty)
-              $('#price'+indexID).val(product_sale_price)
+<!--              $('#product'+indexID).val(pro_code+' '+pro_name)-->
+<!--              $('#product_id'+indexID).val(pro_id)-->
+<!--              $('#closeStock'+indexID).val(qty)-->
+<!--              $('#price'+indexID).val(product_sale_price)-->
 
-            }
-            //console.log(result.product['p_name'],result.product['p_qty'],'==========================response')
-          },
-          error: function (xhr, errmsg, err) {
-            // Handle the error
-            console.log(xhr.status + ": " + xhr.responseText);
-          }
-        });
-      }
+<!--            }-->
+<!--            //console.log(result.product['p_name'],result.product['p_qty'],'==========================response')-->
+<!--          },-->
+<!--          error: function (xhr, errmsg, err) {-->
+<!--            // Handle the error-->
+<!--            console.log(xhr.status + ": " + xhr.responseText);-->
+<!--          }-->
+<!--        });-->
+<!--      }-->
+
+
 
 </script>
 
@@ -293,6 +385,8 @@
       }
 
     }
+
+
 
 </script>
 
@@ -364,16 +458,18 @@
         return false;
       }
     }
+
+
 </script>
 
 <script>
     function add_discount(indexID){
         var dis_count = $('#discount'+indexID).val();
-        if(dis_count < 1){
-            $('#discount'+indexID).val('');
-            alert('please enter discount more than 1 percent or flat !')
-            return false;
-        }
+<!--        if(dis_count < 1){-->
+<!--            $('#discount'+indexID).val('');-->
+<!--            alert('please enter discount more than 1 percent or flat !')-->
+<!--            return false;-->
+<!--        }-->
       var pro_id = $('#product_id'+indexID).val();
 
       if (pro_id != '') {
@@ -405,6 +501,8 @@
        }
     }
 
+
+
 </script>
 
 <script>
@@ -412,5 +510,7 @@
         $('#bill_date').datepicker({ dateFormat: 'yy-mm-dd' });
         $('#bill_date').datepicker('setDate', new Date());
     });
+
+
 </script>
 {% endblock js %}
