@@ -196,7 +196,7 @@
         const newItem = `<div class="row remove_tr${itemIndex} mb-3">
                         <div class="col-md-2">
                           <label for="item${itemIndex}">Item</label>
-                          <input onkeyup="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" autocomplete="off" required>
+                          <input oninput="get_product('${itemIndex}');" style="text-transform: uppercase;" type="text" class="form-control item-name" name="product"  id="product${itemIndex}" placeholder="Item Name" autocomplete="off" required>
                             <input type="hidden" id="product_id${itemIndex}" name="product_id" value="">
                         </div>
                         <div class="col-md-2">
