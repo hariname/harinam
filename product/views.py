@@ -53,7 +53,6 @@ def search_product(request):
         code = request.GET.get('code')
         product = Product.objects.filter(Q(code__startswith=code) | Q(product_name__startswith=code))
         product_list = []
-
         for product in product:
             data_dict = {}
             data_dict['p_id'] = product.id
@@ -63,7 +62,7 @@ def search_product(request):
             data_dict['p_qty'] = product.present_stock if product.present_stock else 0
             product_list.append(data_dict)
         json_data = {
-            'length': len(data_dict),
+            'length': len(product_list),
             'product': product_list,
         }
         return JsonResponse(json_data)
