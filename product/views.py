@@ -65,6 +65,8 @@ def search_product(request):
             'length': len(product_list),
             'product': product_list,
         }
+
+        print(json_data,'============json_data')
         return JsonResponse(json_data)
 
 
