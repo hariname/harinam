@@ -51,6 +51,7 @@ def add_product(request):
 def search_product(request):
     if request.method == 'GET':
         code = request.GET.get('code')
+        code = code.upper()
         product = Product.objects.filter(Q(code__startswith=code) | Q(product_name__startswith=code))
         product_list = []
         for product in product:
